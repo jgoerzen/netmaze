@@ -1,0 +1,54 @@
+#!/usr/bin/make -f
+
+# Debian Package Building Makefile
+
+# Package maintainer: John Goerzen <jgoerzen@complete.org>
+
+# Configuration and compilation
+
+PACKAGENAME=netmaze
+BASE=debian/tmp
+BINARIES=$(PACKAGENAME)
+AUXBINARIES=netserv betterbot dummy follower
+LIBDIR=$(BASE)/usr/lib/games/$(PACKAGENAME)
+
+build:
+	xmkmf
+# Force compilation using -O3....
+	cp Makefile Makefile~
+	sed s/-O2/-O3/ Makefile~ > Makefile
+	make
+
+binary: binary-arch binary-indep
+
+binary-indep:
+
+# This one needs to be root.
+
+binary-arch: build
+	rm -rf debian/tmp
+	install -d debian/tmp debian/tmp/DEBIAN debian/tmp/usr/X11R6/bin \
+		debian/tmp/usr/doc/$(PACKAGENAME) \
+		$(LIBDIR)
+# Netmaze goes into bin, everything else to the lib dir.
+	install -s $(BINARIES) debian/tmp/usr/X11R6/bin/
+	install -s $(AUXBINARIES) $(LIBDIR)/
+	cp -r mazes lib $(LIBDIR)
+	chmod go+rx $(LIBDIR)/{mazes,lib}
+	cp debian/copyright debian/tmp/usr/doc/$(PACKAGENAME)/copyright
+	cp debian/changelog debian/tmp/usr/doc/$(PACKAGENAME)/changelog.Debian
+	cp README.Debian CREDITS README TODO debian/tmp/usr/doc/$(PACKAGENAME)
+	cp CHANGES debian/tmp/usr/doc/$(PACKAGENAME)/changelog
+	gzip -9vr debian/tmp/usr/doc/$(PACKAGENAME)
+	dpkg-shlibdeps debian/tmp/usr/X11R6/bin/netmaze \
+		$(LIBDIR)/{netserv,betterbot,follower,dummy}
+	dpkg-gencontrol
+	chown -R root.root debian/tmp
+	chmod -R go-ws,go+r debian/tmp
+	dpkg --build debian/tmp ..
+
+clean:
+	make clean
+	rm -rf debian/tmp debian/files debian/substvars debian/*~ \
+		*.o *~ Makefile *.bak
+

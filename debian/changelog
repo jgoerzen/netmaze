@@ -1,0 +1,14 @@
+netmaze (0.81-2) unstable; urgency=low
+
+  * Fixed location of installed netmaze binary (now is /usr/X11R6/bin)
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 17 Jan 1997 23:49:41 -0600
+
+netmaze (0.81-1) unstable; urgency=low
+
+  * First Debian package of this program
+  * Netmaze may be moving to a new maintainer -- expect a new upstream
+    version soon.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 02 Jan 1997 22:11:39 -0600
+

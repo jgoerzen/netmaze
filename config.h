@@ -4,17 +4,17 @@
  */
 
 /* #define HPUX 1  */
-#define SunOS4 1
+/* #define SunOS4 1 */
 /* #define IRIX 1 */
-/* #define Linux 1 */
+#define Linux 1
 /* #define RS6000 1 */  /* look at CREDITS */
 /* #define NeXT 1   */  /* look at CREDITS */
 
 /* #define USE_SOUND 1 */
 
 /* set the paths, according to your environment: */
-#define AUDIOPATH "./lib/netmaze.seq"
-#define TEXTUREPATH "./lib/"
+#define AUDIOPATH "/usr/lib/games/netmaze/lib/netmaze.seq"
+#define TEXTUREPATH "/usr/lib/games/netmaze/lib/"
 
 /*********************************************************
  * Setup machinedepend configuration
