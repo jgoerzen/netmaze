@@ -3,18 +3,17 @@ Readme for Debianized Netmaze
 John Goerzen <jgoerzen@complete.org>
 
 Netmaze is comprised of several parts:
- * Main program, /usr/X11R6/bin/netmaze
- * Netmaze server binary, installed to /usr/lib/games/netmaze/netserv
+ * Main program, /usr/games/netmaze
+ * Netmaze server binary, installed to /usr/ganes/netserv
  * Robots.  Named dummy, follwer, and betterbot and installed to
    /usr/lib/games/netmaze.
  * Mazes -- installed to /usr/lib/games/netmaze/mazes
  * Textures for texturemode -- installed to /usr/lib/games/netmaze/lib
 
 To play by yourself, all you need to do is run netmaze.  To network the
-game, one person needs to run the netserv program installed in
-/usr/lib/games/netmaze/netserv.  Everyone playing needs to run
-``netmaze -server xxx'' where xxx is the name of the machine where netserv
-is running.
+game, one person needs to run the netserv program.  Everyone playing needs
+to run ``netmaze -server xxx'' where xxx is the name of the machine where
+netserv is running.
 
 >>>>>>>>>>> NOTE: BUG
 

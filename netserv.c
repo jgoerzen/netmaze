@@ -106,7 +106,7 @@ struct pqueue *find_player(char*);
 
 
 #ifdef HAVE_FDSET
-  struct fd_set readmask;
+  fd_set readmask;
 #else
   struct fd_mask readmask;
 #endif
@@ -626,7 +626,7 @@ void start_signal(void)
   if (sigvector(SIGALRM, &vec1, (struct sigvec *) 0) == -1) perror("SIGALRM\n");
 #else
   vec1.sa_handler = (void (*)(int)) inter;
- #ifdef RS6000 /* ibm rs/6000 */
+ #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
    sigemptyset(&vec1.sa_mask);
  #else
   vec1.sa_mask = 0;
@@ -649,7 +649,7 @@ void setup_sigchild(void) /* for external menu */
   struct sigaction svec1;
 
   svec1.sa_handler = (void (*)(int)) handle_sigchild;
- #ifdef RS6000 /* ibm rs/6000 */
+ #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
    sigemptyset(&svec1.sa_mask);
  #else
   svec1.sa_mask = 0;
@@ -779,7 +779,7 @@ void do_timer(int nowaitgroup)
 void io_cntl(void)
 {
 #ifdef HAVE_FDSET
-  struct fd_set readmask1;
+  fd_set readmask1;
 #else
   struct fd_mask readmask1;
 #endif

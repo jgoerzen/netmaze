@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <signal.h>
 #include <sys/signal.h>
 #include <sys/time.h>
 #include <sys/ioctl.h>
@@ -380,10 +381,10 @@ static void start_signal(void)
   if ( sigvector(SIGALRM, &vec, &ovec) == -1) perror("SIGALRM\n");
 #else
   vec.sa_handler = (void (*)(int)) solo_timer;
- #ifdef RS6000 /* ibm rs/6000 */
+ #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
    sigemptyset(&vec.sa_mask);
  #else
-   vec.sa_mask = 0;
+  vec.sa_mask = 0;
  #endif
   vec.sa_flags = 0;
   if ( sigaction(SIGALRM, &vec, &ovec) == -1) perror("SIGALRM\n");
@@ -409,7 +410,7 @@ static void setup_sigchild(void)
   struct sigaction vec;
 
   vec.sa_handler = (void (*)(int)) child_signal;
- #ifdef RS6000 /* ibm rs/6000 */
+ #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
    sigemptyset(&vec.sa_mask);
  #else
   vec.sa_mask = 0;

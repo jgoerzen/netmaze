@@ -11,6 +11,7 @@ BASE=debian/tmp
 BINARIES=$(PACKAGENAME)
 AUXBINARIES=netserv betterbot dummy follower
 LIBDIR=$(BASE)/usr/lib/games/$(PACKAGENAME)
+STRIP=strip
 
 build:
 	xmkmf
@@ -18,29 +19,32 @@ build:
 	cp Makefile Makefile~
 	sed s/-O2/-O3/ Makefile~ > Makefile
 	make
+	touch build
 
 binary: binary-arch binary-indep
 
-binary-indep:
+binary-indep: build
 
 # This one needs to be root.
 
 binary-arch: build
 	rm -rf debian/tmp
-	install -d debian/tmp debian/tmp/DEBIAN debian/tmp/usr/X11R6/bin \
+	install -d debian/tmp debian/tmp/DEBIAN debian/tmp/usr/games \
 		debian/tmp/usr/doc/$(PACKAGENAME) \
 		$(LIBDIR)
 # Netmaze goes into bin, everything else to the lib dir.
-	install -s $(BINARIES) debian/tmp/usr/X11R6/bin/
-	install -s $(AUXBINARIES) $(LIBDIR)/
+	install $(BINARIES) debian/tmp/usr/games
+	$(STRIP) debian/tmp/usr/games/$(BINARIES)
+	install $(AUXBINARIES) $(LIBDIR)/
+	$(STRIP) $(LIBDIR)/*
 	cp -r mazes lib $(LIBDIR)
 	chmod go+rx $(LIBDIR)/{mazes,lib}
-	cp debian/copyright debian/tmp/usr/doc/$(PACKAGENAME)/copyright
 	cp debian/changelog debian/tmp/usr/doc/$(PACKAGENAME)/changelog.Debian
 	cp README.Debian CREDITS README TODO debian/tmp/usr/doc/$(PACKAGENAME)
 	cp CHANGES debian/tmp/usr/doc/$(PACKAGENAME)/changelog
 	gzip -9vr debian/tmp/usr/doc/$(PACKAGENAME)
-	dpkg-shlibdeps debian/tmp/usr/X11R6/bin/netmaze \
+	cp debian/copyright debian/tmp/usr/doc/$(PACKAGENAME)/copyright
+	dpkg-shlibdeps debian/tmp/usr/games/netmaze \
 		$(LIBDIR)/{netserv,betterbot,follower,dummy}
 	dpkg-gencontrol
 	chown -R root.root debian/tmp
@@ -48,7 +52,8 @@ binary-arch: build
 	dpkg --build debian/tmp ..
 
 clean:
-	make clean
-	rm -rf debian/tmp debian/files debian/substvars debian/*~ \
+	-make clean
+	rm -rf build debian/tmp debian/files debian/substvars debian/*~ \
 		*.o *~ Makefile *.bak
 
+.PHONY: clean binary binary-indep binary-arch

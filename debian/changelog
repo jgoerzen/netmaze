@@ -1,3 +1,24 @@
+netmaze (0.81-3) unstable; urgency=low
+
+  * 
+  * Fixed debian/rules, closing bug #16992
+  * Moved netserv to /usr/games as well, since it is a binary that
+    users need to execute directly.  Left the bots in
+    /usr/lib/games/netmaze.
+  * Updated README.Debian, which wasn't updated with 0.81-2.2. 
+    README.Debian tells users where all the files are installed that they
+    need.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sun, 22 Feb 1998 12:55:04 -0600
+
+netmaze (0.81-2.2) unstable; urgency=low
+
+  * Non-maintainer release.
+  * Move location of binary to /usr/games. (#8447)
+  * Libc6 compile.
+
+ -- Martin Mitchell <martin@debian.org>  Mon, 17 Nov 1997 19:05:34 +1100
+
 netmaze (0.81-2) unstable; urgency=low
 
   * Fixed location of installed netmaze binary (now is /usr/X11R6/bin)

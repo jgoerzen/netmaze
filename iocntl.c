@@ -16,8 +16,8 @@
 #include <sys/ioctl.h>
 
 #ifdef HAVE_FDSET
- struct fd_set readmask;
- struct fd_set writemask;
+ fd_set readmask;
+ fd_set writemask;
 #else
  struct fd_mask readmask;
  struct fd_mask writemask;
@@ -60,7 +60,7 @@ int init_net(char *hostname)
     perror(" sigaction(SIGIO)");
 #else
   vec.sa_handler = (void (*)) io_handler;
- #ifdef RS6000 /* ibm rs/6000 */
+ #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
    sigemptyset(&vec.sa_mask);
  #else
   vec.sa_mask = 0;
@@ -144,8 +144,8 @@ static void io_handler(int a)
   static char	buf[256];
 
 #ifdef HAVE_FDSET
-  struct fd_set	 readmask1;
-  struct fd_set	 writemask1;
+  fd_set	 readmask1;
+  fd_set	 writemask1;
 #else
   struct fd_mask readmask1;
   struct fd_mask writemask1;
