@@ -1,0 +1,4 @@
+?package(netmaze):needs=X11 section=Games/Arcade\
+  title="Netmaze Client" command="/usr/games/netmaze"
+?package(netmaze):needs=X11 section=Games/Arcade\
+  title="Netmaze X Netserv" command="/usr/games/netmaze/netserv"

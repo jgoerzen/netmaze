@@ -10,6 +10,8 @@
 
 #define NETMAZEPORT 12346
 
+#define RS6000 1
+
 #define TRUE  1
 #define FALSE 0
 
@@ -67,7 +69,7 @@
 #define WINNERANZ 10
 
 #define MAXNAME 16
-#define MAXCOMMENT 32
+#define MAXCOMMENT 70
 
 #define MAPSIZE 100
 
@@ -86,6 +88,7 @@
 #define GM_DESTRUCTSHOTS   0x1000 /* - destruct shots on kill */
 #define GM_DECSCORE        0x2000 /* - decrease score of a killed player */
 #define GM_RANKSCORE       0x4000 /* - rankingdependend score-bonus */
+#define GM_TEAMSHOTHURT   0x8000 /* Shots from others on team hurt */
 
 /* maze-data defines: */
 #define MAZE_TYPEMASK     0x000f

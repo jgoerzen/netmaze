@@ -1,0 +1,19 @@
+#!/bin/sh
+
+cd /usr/lib/games/netmaze
+
+if test -f nmlogo.gif
+  then \
+  echo "----------------------------------------------------------------"
+  echo "It may take a few seconds for the X interface to come up; please"
+  echo "be patient.  If you don't want to watch what is going on in the"
+  echo "text interface, you may minimize your xterm/rxvt."
+  echo "----------------------------------------------------------------"
+  /usr/lib/games/netmaze/netserv -nowait -tclmenu -suppressXnag -exmenu /usr/lib/games/netmaze/xnetserv.tcl $*
+  echo "If netserv died before xnetserv did (eg, because it could not"
+  echo "bind), you may need to make sure xnetserv.tcl died."
+else \
+  echo "You must start xnetserv from the Netmaze directory."
+  echo "use the CD command to change to that directory before starting"
+  echo "xnetserv."
+fi

@@ -3,7 +3,10 @@ only major change made was compiling with -O3 instead of -O2.  (Makes more
 sense for a program that is very speed-sensitive)
 
 Debian GNU/Linux users can find the GNU General Public License in the file
-/usr/doc/copyright/GPL or /usr/doc/copyright/GPL.gz
+/usr/share/common-licenses/GPL
+
+Original code is (C) M. Hipp.  New code is (C) by respective others; mostly
+John Goerzen.
 
 --------------------------------------------------------------------
 

@@ -1,3 +1,8 @@
+#undef InstallManPage
+#define InstallManPage(file,destdir)   # fake IMP(file,destdir)
+#undef InstallManPageLong
+#define InstallManPageLong(file,destdir,dest) # fake IMPL(file,destdir,dest)
+
 #CC = gcc
 LOCAL_LIBRARIES = $(XLIB) -lm
 EXTRA_DEFINES = -DSH_MEM

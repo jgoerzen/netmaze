@@ -1,3 +1,72 @@
+netmaze (0.81+jpg0.82-8) unstable; urgency=low
+
+  * Built with Tix 8.1.  Closes: #158846.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 30 Aug 2002 18:47:31 -0500
+
+netmaze (0.81+jpg0.82-7) unstable; urgency=low
+
+  * Clarified upstream status in copyright and README.Debian.
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 21 Feb 2002 10:36:41 -0500
+
+netmaze (0.81+jpg0.82-6) unstable; urgency=low
+
+  * Fixed build failure by adding a #define to Imakefile.
+    Closes: #123741.
+  * Updated description with new doc directory.  Closes: #108278.
+  * Updated standards-version to 3.5.2.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue, 19 Feb 2002 12:17:31 -0500
+
+netmaze (0.81+jpg0.82-5) unstable; urgency=low
+
+  * Clean-up from Magallon's NMU:
+    + Build against proper X libraries.  The NMU rendered it uninstallable.
+      Closes: #94503.
+    + ACK.  Closes: #94111.
+    + BTS cleanup.  Closes: #91612.
+  * Standards-Version already bumped.  Closes: #87173.  
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 23 Apr 2001 10:23:51 -0500
+
+netmaze (0.81+jpg0.82-4.1) unstable; urgency=low
+
+  * NMU
+  * Move doc to /usr/share (closes: bug#91612)
+  * Fixed some lintian warkings
+
+ -- Marcelo E. Magallon <mmagallo@debian.org>  Mon, 16 Apr 2001 01:10:18 +0200
+
+netmaze (0.81+jpg0.82-4) unstable; urgency=low
+
+  * Modified xnetserv.tcl to call wish8.0 explicitly.  Closes: #59690.
+  * Added menu entry.  Closes: #52281.
+
+ -- John Goerzen <jgoerzen@complete.org>  Wed, 31 May 2000 12:33:25 -0500
+
+netmaze (0.81+jpg0.82-3) unstable; urgency=low
+
+  * Added people to the credits file.
+  * xnetserv now starts netserv with -nowait.
+  * More patches to avoid warnings and perhaps prevent some bugs.
+
+ -- John Goerzen <jgoerzen@complete.org>  Tue, 19 Oct 1999 17:10:35 -0500
+
+netmaze (0.81+jpg0.82-2) unstable; urgency=low
+
+  * Make sure to chmod +x xnetserv.tcl.
+  * Start assembling a list of credits for the program.
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 27 Sep 1999 11:02:04 -0500
+
+netmaze (0.81+jpg0.82-1) unstable; urgency=low
+
+  * Integrated patches from John Goerzen to add various features
+    to the program.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sun, 26 Sep 1999 13:11:20 -0500
+
 netmaze (0.81-3) unstable; urgency=low
 
   * 

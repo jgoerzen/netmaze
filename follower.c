@@ -3,6 +3,7 @@
  * written and copyrights: roderick@ksu.ksu.edu (Mike Roderick)
  */
 
+#include <string.h>
 #include "netmaze.h"
 #include <math.h>
 

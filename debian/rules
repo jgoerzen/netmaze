@@ -30,30 +30,36 @@ binary-indep: build
 binary-arch: build
 	rm -rf debian/tmp
 	install -d debian/tmp debian/tmp/DEBIAN debian/tmp/usr/games \
-		debian/tmp/usr/doc/$(PACKAGENAME) \
+		debian/tmp/usr/share/doc/$(PACKAGENAME) debian/tmp/usr/lib/menu \
 		$(LIBDIR)
 # Netmaze goes into bin, everything else to the lib dir.
-	install $(BINARIES) debian/tmp/usr/games
-	$(STRIP) debian/tmp/usr/games/$(BINARIES)
-	install $(AUXBINARIES) $(LIBDIR)/
-	$(STRIP) $(LIBDIR)/*
-	cp -r mazes lib $(LIBDIR)
-	chmod go+rx $(LIBDIR)/{mazes,lib}
-	cp debian/changelog debian/tmp/usr/doc/$(PACKAGENAME)/changelog.Debian
-	cp README.Debian CREDITS README TODO debian/tmp/usr/doc/$(PACKAGENAME)
-	cp CHANGES debian/tmp/usr/doc/$(PACKAGENAME)/changelog
-	gzip -9vr debian/tmp/usr/doc/$(PACKAGENAME)
-	cp debian/copyright debian/tmp/usr/doc/$(PACKAGENAME)/copyright
+	install -s -o root -g root -m 0755 $(BINARIES) debian/tmp/usr/games
+	install -o root -g root -m 0755 xnetserv debian/tmp/usr/games
+	install -s -o root -g root -m 0755 $(AUXBINARIES) $(LIBDIR)/
+	cp -r mazes lib *.tcl $(LIBDIR)
+	chmod 0755 $(LIBDIR)/{mazes,lib,*.tcl}
+	uudecode nmlogo.gif.uue
+	cp nmlogo.gif $(LIBDIR)
+	cp debian/changelog debian/tmp/usr/share/doc/$(PACKAGENAME)/changelog.Debian
+	cp README.Debian CREDITS README TODO debian/tmp/usr/share/doc/$(PACKAGENAME)
+	cp CHANGES debian/tmp/usr/share/doc/$(PACKAGENAME)/changelog
+	gzip -9vr debian/tmp/usr/share/doc/$(PACKAGENAME)
+	cp debian/copyright debian/tmp/usr/share/doc/$(PACKAGENAME)/copyright
+	cp debian/menu debian/tmp/usr/lib/menu/netmaze
 	dpkg-shlibdeps debian/tmp/usr/games/netmaze \
 		$(LIBDIR)/{netserv,betterbot,follower,dummy}
-	dpkg-gencontrol
+	install -o root -g root -m 755 debian/prerm debian/tmp/DEBIAN/
+	install -o root -g root -m 755 debian/postinst debian/tmp/DEBIAN/
+	install -o root -g root -m 755 debian/postrm debian/tmp/DEBIAN/
+	dpkg-gencontrol -isp
 	chown -R root.root debian/tmp
 	chmod -R go-ws,go+r debian/tmp
 	dpkg --build debian/tmp ..
 
 clean:
 	-make clean
-	rm -rf build debian/tmp debian/files debian/substvars debian/*~ \
+	-rm -rf build debian/tmp debian/files debian/substvars debian/*~ \
 		*.o *~ Makefile *.bak
+	-rm nmlogo.gif
 
 .PHONY: clean binary binary-indep binary-arch

@@ -9,6 +9,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <X11/X.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -882,7 +883,10 @@ void draw_kills(int nr,PLAYER *play)
 
   if(sm->killchg)
   {
+    /* JG Hack....  10/24/96... Was:
     XFillRectangle(sm->grafix.display,sm->grafix.killfg,blackgc,0,0,200,80);
+    */
+    XFillRectangle(sm->grafix.display,sm->grafix.killfg,blackgc,0,0,200,800);
     for(i=0;i<play[nr].killanz;i++)
     {
       XFillArc(sm->grafix.display,sm->grafix.killfg,

@@ -10,11 +10,11 @@
 /* #define RS6000 1 */  /* look at CREDITS */
 /* #define NeXT 1   */  /* look at CREDITS */
 
-/* #define USE_SOUND 1 */
+#define USE_SOUND 1
 
 /* set the paths, according to your environment: */
-#define AUDIOPATH "/usr/lib/games/netmaze/lib/netmaze.seq"
-#define TEXTUREPATH "/usr/lib/games/netmaze/lib/"
+#define AUDIOPATH "./lib/netmaze.seq"
+#define TEXTUREPATH "./lib/"
 
 /*********************************************************
  * Setup machinedepend configuration
@@ -35,6 +35,8 @@
 #  undef USE_SIGVEC
 #endif
 
+#define USE_IPC
+
 #if (Linux)
 #  define HAVE_FDSET
 #  define USE_IPC
@@ -44,7 +46,7 @@
 #  else
 #    undef HAVE_FDSET
 #  endif
-#  undef USE_IPC
+/* #  undef USE_IPC */
 #endif
 
 
@@ -53,3 +55,4 @@
 #endif
 
 
+#undef USE_SOUND

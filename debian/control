@@ -2,20 +2,18 @@ Source: netmaze
 Maintainer: John Goerzen <jgoerzen@complete.org>
 Section: games
 Priority: optional
-Standards-Version: 2.1.2.2
+Standards-Version: 3.5.2
+Build-Depends: sharutils, tix8.1-dev, xlibs-dev, xutils
 
 Package: netmaze
 Architecture: any
-Depends: ${shlibs:Depends}
+Section: games
+Priority: optional
+Depends: ${shlibs:Depends}, tix8.1, wish
 Description: 3-D Multiplayer Combat Game
  This is a 3-D multiplayer game for X.  You can play by
  yourself, use computerized players ("bots"), or you can
  use a TCP/IP network and play against other players.
  .
  Be sure to read the documentation that will be
- installed in /usr/doc/netmaze/README.Debian
- .
- This is currently a pre-release version.  It may be in
- the process of being switched to a new maintainer, so
- there may be a significantly updated version available
- soon.
+ installed in /usr/share/doc/netmaze/README.Debian

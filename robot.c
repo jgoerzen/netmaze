@@ -94,7 +94,7 @@ int main(int argc,char **argv)
     perror(" sigaction(SIGIO)");
 #else
   vec.sa_handler = (void (*)(int)) io_handler;
- #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
+ #ifdef RS6000 /* ibm rs/6000 */
    sigemptyset(&vec.sa_mask);
  #else
   vec.sa_mask = 0;

@@ -34,7 +34,7 @@
 #endif
 
 #ifdef HAVE_FLUSH
- #include <stropts.h>
+/* #include <stropts.h> */
 #endif
 
 #ifdef SS10_AUDIO

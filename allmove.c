@@ -259,8 +259,9 @@ RERUN:
         else if(plynum == sm->shownumber)
           play_sound(4);
 
-
-        if(player->team != players[plynum].team) /* friendly-fire-protect */
+	/* JG HACK */
+        if((player->team != players[plynum].team) ||
+           (sm->gamemode & GM_TEAMSHOTHURT)) /* friendly-fire-protect */
         {
           player->stat.hits++;
           players[plynum].stat.ownhits++;
@@ -279,9 +280,36 @@ RERUN:
           else if(plynum == sm->shownumber)
             play_sound(3);
 
-          player->stat.kills++;
-          players[plynum].stat.ownkills++;
+          /* JG HACK */
+          if(player->team != players[plynum].team) {
+              player->stat.kills++;
+              players[plynum].stat.ownkills++;
+              
+              /* JG HACK 10/24/96 */
+              if (sm->gamemode & GM_DECSCORE) {
+                /* Decrease score of killed player, if possible. */
+                if (players[plynum].stat.kills > 0)
+                  players[plynum].stat.kills--;
+                  
+                /* Decrease score of killed *team*.... */
+                
+                if (sm->teams[players[plynum].team].kills > 0)
+                  sm->teams[players[plynum].team].kills--;
+              }
+              
+              /* JG HACK 10/24/96 */
+              if (sm->gamemode & GM_REPOWERONKILL) {
+                /* Full power if you kill someone! */
+                player->fitness = sm->config.startfitness;
+              }
 
+              sm->teams[player->team].kills++; /* inc kills */
+
+              
+          }
+
+
+              
           player->follow = -1;
           players[plynum].alive     = FALSE;  /* make him dead */
           players[plynum].fitness   = -sm->config.deadtime;/*reincarnate-delay*/
@@ -290,7 +318,7 @@ RERUN:
           player->killtable[player->killanz] = plynum;
           player->killanz++;
           player->killchg = TRUE;
-          sm->teams[player->team].kills++; /* inc kills */
+
           if(sm->teams[player->team].kills >= sm->config.kills2win) /*enough kills?*/
           {
             sm->gameflag   = FALSE;

@@ -92,6 +92,8 @@ void do_timer(int);
 void start_signal(void);
 void io_cntl(void);
 void handle_sigchild(int s);
+int read_pipe(int socket, char *buf, int maxlen);
+int read_buffer(int fd, char *buf, int count);
 
 void accept_socket(void);
 void close_timeout_sockets(struct gqueue *);
@@ -123,6 +125,11 @@ struct pqueue *find_player(char*);
   struct itimerstruct value,ovalue;
 #endif
 
+int use_tclmenu = 0; /* JG HACK */
+int suppressXnag = 0;
+char tclcommand[200];
+
+void sendcommand(void);
 
 /**************************************
  * main()
@@ -151,6 +158,10 @@ int main(int argc,char **argv)
       }
       else if(strcmp(argv[i],"-nowait") == 0)
         nowait = TRUE;
+      else if(strcmp(argv[i],"-suppressXnag") == 0)
+        suppressXnag = 1;
+      else if(strcmp(argv[i],"-tclmenu") == 0)
+        use_tclmenu = TRUE;
       else
         usage();
     }
@@ -210,8 +221,13 @@ int main(int argc,char **argv)
   if (listen(acc_socket, 5) == -1 ) { perror(argv[0]); exit(1); }
 
   start_signal();
-  printf(" Netmaze Server 0.36alpha/March 1994 by MH ...\n");
+  printf(" Netmaze Server 0.36alpha/March 1994 by MH; ");
+  printf(" Modified by John Goerzen Oct, 1996 <jgoerzen@complete.org> (.81)\n");
   printf(" Using Port: %d\n",NETMAZEPORT);
+  if (!suppressXnag) {
+    printf(">>>>>>>>>>>>\a\a CHECK OUT THE NEW xnetserv PROGRAM!\a\n");
+    printf(">>>>>>>>>>>> The all new interface to the Netmaze server.\n");
+  }
   print_menu();
 
   for(;;)
@@ -353,9 +369,19 @@ void do_command(struct gqueue *g,struct pqueue *pl,char *line)
         }
         break;
       case MENU_DISCONNECT:
+        close(acc_socket);
         if(pl != NULL)
           break;
         i = (int) line[1];
+/*        for(p=g->first,i=0;p!=NULL;p=p->gnext,i++)  
+	for(p=g->first;p!=NULL;p=p->gnext,i--)
+	{
+	  if(!i)
+	  {
+	    break;
+	  }
+	}
+	i = (int) line[1]; */
         for(q=cfirst;q!=NULL;q=q->next,i--)
         {
           if(!i)
@@ -381,11 +407,17 @@ void do_command(struct gqueue *g,struct pqueue *pl,char *line)
         break;
       case MENU_SETTEAMS:
         for(p=g->first,i=0;p!=NULL;p=p->gnext,i++)
+	
         {
           if((p->team < 0) || (p->team > MAXPLAYERS))
             p->team = 0;
           else
-            p->team = (int) line[i+1];
+            p->team = (int) line[i+1];   
+            
+          if((q->players->team < 0) || (q->players->team > MAXPLAYERS))
+            q->players->team = 0;
+          else
+            q->players->team = (int) line[i+1];
         }
         break;
     }
@@ -406,11 +438,17 @@ void handle_input(void)
   struct pqueue *p;
 
   memset(line,0,256);
-  len = read(0,line,255);
+  if (use_exmenu && use_tclmenu) {
+    len = read_pipe(menu_in, line, 255);
+  } else {
+     len = read(0,line,255);
+  }
+  		/* JG HACK */
 
   if(len == 0)
   {
     fprintf(stderr,"OOPS: end-of-file??\n");
+    exit(255);				/* JG added this line */
     return;
   }
 
@@ -418,6 +456,8 @@ void handle_input(void)
   if(a == 0)
   {
     printf("Unknown command\n");
+    sprintf(tclcommand, "MESSAGE\nUnknown command\n");
+    sendcommand();
     print_menu();
     return;
   }
@@ -428,11 +468,15 @@ void handle_input(void)
       if(a == 1)
       {
         printf("OK .. re-initalize builtin-maze\n");
+        sprintf(tclcommand, "MESSAGE\nOK... re-initialize built-in maze\n");
+        sendcommand();
         if(create_maze(&(g->maze)))
           g->nomaze=FALSE;
         else
         {
           printf("Can't init maze\n");
+          sprintf(tclcommand, "MESSAGE\nCan't initialize maze.\n");
+          sendcommand();
           g->nomaze=TRUE;
         }
       }
@@ -444,20 +488,30 @@ void handle_input(void)
           {
             g->nomaze=FALSE;
             printf("Maze is OK!\n");
+            sprintf(tclcommand, "MESSAGE\nMaze is OK!\n");
+            sendcommand();
           }
           else
           {
             g->nomaze=TRUE;
             printf("Can't load '%s'\n",name);
+            sprintf(tclcommand, "MESSAGE\nCan't load \"%s\"\n", name);
+            sendcommand();
           }
         }
         else
         {
           sscanf(line,"%d%d%d",&c,&i,&j);
-          if(random_maze(&(g->maze),i,j))
+          if(random_maze(&(g->maze),i,j)) {
             printf("Randommaze is ok!\n");
-          else
+            sprintf(tclcommand, "MESSAGE\nRandom maze is ok.\n");
+            sendcommand();
+          }
+          else {
             printf("Error, size too big!\n");
+            sprintf(tclcommand, "MESSAGE\nError, size too big.\n");
+            sendcommand();
+          }
         }
       }
       break;
@@ -466,11 +520,15 @@ void handle_input(void)
       if(g->nomaze == TRUE)
       {
         printf("Load/Reinit a Maze first!\n");
+        sprintf(tclcommand, "MESSAGE\nLoad/reinit a maze first!\n");
+        sendcommand();
         return;
       }
       if(g->numplayers == 0)
       {
         printf("No players yet!\nTry again later\n");
+        sprintf(tclcommand, "MESSAGE\nNo players net; try again later.\n");
+        sendcommand();
         return;
       }
       if(a == 1)
@@ -500,14 +558,21 @@ void handle_input(void)
             if(teams[j] > g->numteams) g->numteams = teams[j];
           g->numteams++;
 
-          if(g->numplayers == 0)
+          if(g->numplayers == 0) {
             printf("No player yet!\nTry again later\n");
+            sprintf(tclcommand, "MESSAGE\nNo player yet; try again later.\n");
+            sendcommand();
+          }
           else
           {
             start_game(g,teams);
           }
         }
-        else printf("Illegal team-selection!\n");
+        else {
+          printf("Illegal team-selection!\n");
+          sprintf(tclcommand, "MESSAGE\nIllegal team selection.\n");
+          sendcommand();
+        }
       }
       break;
     case 3:
@@ -529,10 +594,71 @@ void handle_input(void)
           }
         }
       }
-      else
+      else {
         printf("Too few parameters.\n");
+        sprintf(tclcommand, "MESSAGE\nToo few parameters.\n");
+        sendcommand();
+      }
       break;
-    case 6:
+
+/* JG HACK.... */
+      case 21: g->gamemode = (g->gamemode & GM_REFLECTINGSHOTS) ? 
+               g->gamemode - GM_REFLECTINGSHOTS : g->gamemode | GM_REFLECTINGSHOTS;
+               printf("Reflect (bounce) toggled.\n");
+               break;
+      case 22: g->gamemode = (g->gamemode & GM_DECAYINGSHOTS) ? 
+               g->gamemode - GM_DECAYINGSHOTS : g->gamemode | GM_DECAYINGSHOTS;
+               printf("Decay (shots lose power) toggled.\n");
+               break;
+      case 23: g->gamemode = (g->gamemode & GM_MULTIPLESHOTS) ? 
+               g->gamemode - GM_MULTIPLESHOTS : g->gamemode | GM_MULTIPLESHOTS;
+               printf("Multishots toggled.\n");
+               break;
+      case 24: g->gamemode = (g->gamemode & GM_WEAKINGSHOTS) ? 
+               g->gamemode - GM_WEAKINGSHOTS : g->gamemode | GM_WEAKINGSHOTS;
+               printf("Hurts to shoot toggled..\n");
+               break;
+      case 25: g->gamemode = (g->gamemode & GM_REPOWERONKILL) ? 
+               g->gamemode - GM_REPOWERONKILL : g->gamemode | GM_REPOWERONKILL;
+               printf("Full power after killing someone toggled.\n");
+               break;
+      case 26: g->gamemode = (g->gamemode & GM_FASTRECHARGE) ? 
+               g->gamemode - GM_FASTRECHARGE : g->gamemode | GM_FASTRECHARGE;
+               printf("Fast recharge toggled.\n");
+               break;
+      case 27: g->gamemode = (g->gamemode & GM_FASTWALKING) ? 
+               g->gamemode - GM_FASTWALKING : g->gamemode | GM_FASTWALKING;
+               printf("Fast walking toggled.\n");
+               break;
+/*      case 28: g->gamemode = (g->gamemode & GM_SHOWGHOST) ? 
+               g->gamemode - GM_SHOWGHOST : g->gamemode | GM_SHOWGHOST;
+               printf("Show ghost (ghostmode) toggled.\n");
+               break;  */
+      case 29: g->gamemode = (g->gamemode & GM_ALLOWHIDE) ? 
+               g->gamemode - GM_ALLOWHIDE : g->gamemode | GM_ALLOWHIDE;
+               printf("Allow hide (cloak) toggled.\n");
+               break;
+      case 30: g->gamemode = (g->gamemode & GM_ALLOWRADAR) ? 
+               g->gamemode - GM_ALLOWRADAR : g->gamemode | GM_ALLOWRADAR;
+               printf("Radar toggled.\n");
+               break;
+/*      case 31: g->gamemode = (g->gamemode & GM_DESTRUCTSHOTS) ? 
+               g->gamemode - GM_DESTRUCTSHOTS : g->gamemode | GM_DESTRUCTSHOTS;
+               printf("Destruct shots on kill toggled.\n");
+               break;  */
+      case 32: g->gamemode = (g->gamemode & GM_DECSCORE) ? 
+               g->gamemode - GM_DECSCORE : g->gamemode | GM_DECSCORE;
+               printf("Decrease score of killed player toggled.\n");
+               break;
+/*      case 33: g->gamemode = (g->gamemode & GM_RANKSCORE) ? 
+               g->gamemode - GM_RANKSCORE : g->gamemode | GM_RANKSCORE;
+               printf("Rankingdepend score-bonus toggled.\n");
+               break;  */
+        case 34: g->gamemode = (g->gamemode & GM_TEAMSHOTHURT) ? 
+               g->gamemode - GM_TEAMSHOTHURT : g->gamemode | GM_TEAMSHOTHURT;
+               printf("Shots from team members hurt toggled.\n");
+               break;
+/*    case 6:
       if(a == 1)
       {
         if(g->gamemode == 0)
@@ -554,6 +680,7 @@ void handle_input(void)
         }
       }
       break;
+*/
     case 7:
       g->divider++;
       if(g->divider == 3)
@@ -579,6 +706,19 @@ void handle_input(void)
       }
       exit(0);
       break;
+    case 96: /* JG HACK */   /* Will refresh the X interface's playerlist */
+            list_connections();
+            break;
+    case 97: /* JG HACK */
+             printf("Sending message: %s\n", (char *)(line+3));
+             for(q=cfirst;q!=NULL;q=q->next,i--)
+               send_message((char *)(line+3), q);
+             break;
+    case 98: g->gamemode = 0;
+             printf("All options off.\n");
+             g->divider = 0;
+             printf("Beat divider reset to 1.\n");
+             break;
     case 99:
       printf("******** INFO: *********\n\n");
       printf("numplayers: %d response: %d playing: %d gameflag: %d mode: %d.\n",g->numplayers,g->response,g->playing,g->gameflag,g->mode);
@@ -596,6 +736,8 @@ void handle_input(void)
       break;
     default:
       printf("Unknown command\n");
+      sprintf(tclcommand, "MESSAGE\nUnknown command\n");
+      sendcommand();
       print_menu();
       break;
   }
@@ -626,7 +768,7 @@ void start_signal(void)
   if (sigvector(SIGALRM, &vec1, (struct sigvec *) 0) == -1) perror("SIGALRM\n");
 #else
   vec1.sa_handler = (void (*)(int)) inter;
- #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
+ #ifdef RS6000 /* ibm rs/6000 */
    sigemptyset(&vec1.sa_mask);
  #else
   vec1.sa_mask = 0;
@@ -649,7 +791,7 @@ void setup_sigchild(void) /* for external menu */
   struct sigaction svec1;
 
   svec1.sa_handler = (void (*)(int)) handle_sigchild;
- #if defined(RS6000) || defined(__linux__) /* ibm rs/6000 */
+ #ifdef RS6000 /* ibm rs/6000 */
    sigemptyset(&svec1.sa_mask);
  #else
   svec1.sa_mask = 0;
@@ -741,6 +883,9 @@ void do_timer(int nowaitgroup)
             if(p->playing && (p->mode == PLAYERMODE) && !p->connection->response)
             {
               fprintf(stderr,"Connection of Player %d doesn't response!\n",p->number);
+              sprintf(tclcommand, "MESSAGE\nConnection of player %d\nMESSAGECAT\ndoesn't respond\n",
+                      p->number);
+              sendcommand();
             }
           }
         }
@@ -863,7 +1008,8 @@ void io_cntl(void)
     if(use_exmenu)
     {
       if(FD_ISSET(menu_in,&readmask1))
-        handle_exinput();
+/* JG HACK        handle_exinput();    */
+        handle_input();
     }
     else /* keyboard (stdin) */
     {
@@ -900,6 +1046,9 @@ void accept_socket(void)
   get_hostname(q,q->hostname);
 
   printf("\n accepted a connection request from [%s].\n",q->hostname);
+  sprintf(tclcommand, "MESSAGE\nNew connection request from\nMESSAGECAT\n%s\n",
+          q->hostname);
+  sendcommand();
 
   FD_SET(q->socket,&readmask);
 }
@@ -1124,9 +1273,14 @@ void work_input(unsigned char *buf,int len,struct cqueue *q)
         if(strlen((char*)buf+4) > MAXNAME)
           buf[4+MAXNAME] = 0;
         if(q->mode & SINGLEPLAYER)
+
           add_player(q,((int)buf[2]<<8)+buf[3],PLAYERMODE,(char*)buf+4);
         else if(q->mode & SINGLECAMERA)
           add_player(q,((int)buf[2]<<8)+buf[3],CAMMODE,(char*)buf+4);
+
+/*          add_player(q,q->socket,PLAYERMODE,(char*)buf+4);
+        else if(q->mode & SINGLECAMERA)
+          add_player(q,q->socket,CAMMODE,(char*)buf+4); */
         break;
       case NM_REMOVEPLAYER:
         break;
@@ -1142,6 +1296,9 @@ void work_input(unsigned char *buf,int len,struct cqueue *q)
 
 void start_game(struct gqueue *g,int *teams)
 {
+  sprintf(tclcommand, "STARTGAME\n");
+  sendcommand();
+
   g->playing = 1;
   g->numgamers = g->numplayers;
 
@@ -1188,8 +1345,13 @@ void init_slots(int first,int *teams,struct gqueue *g)
 
 void end_game(struct gqueue *g)
 {
+
+  
   char data[2];
   struct pqueue *p;
+
+  sprintf(tclcommand, "STOPGAME\n");
+  sendcommand();
 
   g->playing = 0;
   g->gameflag = FALSE;
@@ -1545,13 +1707,18 @@ struct pqueue *add_player(struct cqueue *c,int cn,int mode,char *name)
     send_mes("OK, player added with an invalid name.",NULL,MSG_PLAYER,p,NULL);
 
   fprintf(stderr,"Added player %s : %d.\n",p->name,p->cnumber);
+  list_connections();
+  sprintf(tclcommand, "MESSAGECAT\nNew player: %s\n", p->name);
+  sendcommand();
 
   return p;
 }
 
 void remove_player(struct pqueue *p,struct cqueue *c)
 {
-
+  list_connections();
+  sprintf(tclcommand, "MESSAGE\nLost player: %s\n", p->name);
+  sendcommand();
   free(p);
   /* if(c != NULL) -> silent on this connection */
 
@@ -1752,18 +1919,31 @@ struct gqueue *new_group(int no)
 void list_connections(void)
 {
   struct cqueue *q;
+  struct pqueue *p;
+  struct gqueue *g=gfirst;
   int i;
 
-  printf("No.: |     Player-Name: | connected from:\n");
+  sprintf(tclcommand, "CONNECTIONLIST\n");
+  sendcommand();  
+  
+  printf("No.: |     Player-Name: | hostname\n");
   printf("-----+------------------+----------------\n");
-  for(q=cfirst,i=0;q!=NULL;q=q->next,i++)
+
+/*  for(p=g->first,i=0;p!=NULL;p=p->gnext,i++)  */
+  for(q=cfirst,i=0;q!=NULL;q=q->next,i++) 
   {
-    if(q->players->mode == PLAYERMODE)
+    if(q->players->mode == PLAYERMODE) {
       printf("%3d  | %16s | %s\n",i,q->players->name,q->hostname);
+      sprintf(tclcommand, "PLAYER\n%d\n%s\n%s\n", i,
+              q->players->name, q->hostname);
+      sendcommand();
+    }
     else
       printf("%3d  | %16s | %s\n",i,"A Camera?!?",q->hostname);
   }
   printf("-----+------------------+----------------\n");
+  sprintf(tclcommand, "ENDCONNECTIONLIST\n");
+  sendcommand();
 }
 
 /***************************/
@@ -1776,6 +1956,7 @@ void usage(void)
   printf("\t-h|-help: this message\n");
   printf("\t-exmenu: Control with an external menu\n");
   printf("\t-nowait: server shouldn't wait for clients (for very slow lines)\n");
+  printf("\t-tclmenu: Uses tcl menu\n");
   exit(0);
 }
 
@@ -1808,12 +1989,6 @@ void print_menu(void)
   printf("\t3            => Stop a running game\n");
   printf("\t4            => List connections\n");
   printf("\t5 <No.>      => Shutdown a connection <No.>\n");
-  if(gfirst->gamemode == 0)
-    printf("\t6            => Enable extended gamemode\n");
-  else if(!(gfirst->gamemode & GM_FASTWALKING))
-    printf("\t6            => Enable extended just-for-fun gamemode\n");
-  else
-    printf("\t6            => Enable classic gamemode\n");
   switch(gfirst->divider)
   {
     case 0:
@@ -1826,7 +2001,87 @@ void print_menu(void)
       printf("\t7            => Change 'beat' divider (current: 4)\n");
       break;
   }
+  printf("\t21: %s, 22: %s, 23: %s, 24: %s\n",
+         (gfirst->gamemode & GM_REFLECTINGSHOTS) ? "BOUNCE" : "bounce",
+         (gfirst->gamemode & GM_DECAYINGSHOTS) ? "DECAY" : "decay",
+         (gfirst->gamemode & GM_MULTIPLESHOTS) ? "MULTISHOT" : "multishot",
+         (gfirst->gamemode & GM_WEAKINGSHOTS) ? "HURTS2SHOOT" : "hurts2shoot");
+  printf("\t25: %s, 26:%s, 27: %s\n",
+         (gfirst->gamemode & GM_REPOWERONKILL) ? "REPOWERONKILL" : "repoweronkill",
+         (gfirst->gamemode & GM_FASTRECHARGE) ? "FASTHEAL" : "fastheal",
+         (gfirst->gamemode & GM_FASTWALKING) ? "FASTWALK" : "fastwalk");
+/*         (gfirst->gamemode & GM_SHOWGHOST) ? "GHOSTMODE" : "ghostmode"); */
+  printf("\t29: %s, 30: %s, 32: %s\n",
+         (gfirst->gamemode & GM_ALLOWHIDE) ? "CLOAK" : "cloak",
+         (gfirst->gamemode & GM_ALLOWRADAR) ? "RADAR" : "radar",
+/*         (gfirst->gamemode & GM_DESTRUCTSHOTS) ? "DESTRUCTSHOTS" : "destructshots", */
+         (gfirst->gamemode & GM_DECSCORE) ? "DECSCORE" : "decscore");
+  printf("\t34: %s\n",
+/*         (gfirst->gamemode & GM_RANKSCORE) ? "RANKSCORE" : "rankscore"); */
+         (gfirst->gamemode & GM_TEAMSHOTHURT) ? "TEAMSHOTHURT" : "teamshothurt");
+     
   printf("\t------------------------------------------\n");
   printf("\t9            => Quit\n\n");
 }
 
+int reaper() {
+  while(wait3(NULL, WNOHANG, NULL) > 0) {}
+}
+
+void sendcommand(void)
+{
+int len;
+char *pts = tclcommand;
+int status = 0, n, count;
+
+  if (!use_tclmenu) return;
+/* Sends the string in tclcommand to the external menu. */
+
+  count = len = strlen(tclcommand);
+
+
+  if (count < 0) exit(255);
+
+   while (status != count) { 
+        n = write(menu_out, pts+status, count-status); 
+        if (n < 0) exit(255);
+        status += n; 
+    } 
+    return;
+} 
+
+int read_buffer(int fd, char *buf, int count)
+{
+    char *pts = buf;
+    int  status = 0, n; 
+
+    if (count < 0) return (-1);
+
+    while (status != count) { 
+        n = read(fd, pts+status, count-status); 
+        if (n < 0) return n;
+        status += n; 
+    }
+    return (status);
+}
+
+
+int read_pipe(int socket, char *buf, int maxlen)
+{
+int status;
+int count = 0;
+
+  while (count <= maxlen) {
+    if ((status = read_buffer(socket, buf+count, 1)) < 1) {
+      printf("Error reading in function read_pipe\n");
+      return 0;
+    }
+    if ((buf[count] == '\n') || buf[count] == '\r') {
+      buf[count] = 0;
+      return count;
+    }
+    count++;
+  }
+  buf[count] = 0;
+  return count;
+}

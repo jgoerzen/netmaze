@@ -4,7 +4,8 @@ John Goerzen <jgoerzen@complete.org>
 
 Netmaze is comprised of several parts:
  * Main program, /usr/games/netmaze
- * Netmaze server binary, installed to /usr/ganes/netserv
+ * Netmaze server binary, installed to /usr/lib/games/netmaze/netserv
+ * X front end to netserv, installed to /usr/games/xnetserv
  * Robots.  Named dummy, follwer, and betterbot and installed to
    /usr/lib/games/netmaze.
  * Mazes -- installed to /usr/lib/games/netmaze/mazes
@@ -24,3 +25,18 @@ This can result in memory on your system being taken up but not used.
 
 After running Netmaze, type ``ipcs''.  For each id listed, called x, type
 ``ipcrm shm x''.
+
+Credits
+======
+Core Program: M. Hipp
+
+Included in the Debian package:
+
+xnetserv: John Goerzen
+Additional mazes: Brian "Rules" McCullogh (rules*), Steve A. Hutchins
+                  (sah*), "roderick", & other Wichita State University
+                  Computer Science students
+
+
+This program is no longer maintained by the original upstream, M. Hipp. 
+John Goerzen has been doing more recent maintenance.

@@ -2,6 +2,7 @@
  * How about a competition between some robots? :-)
  */
 
+#include <string.h>
 #include "netmaze.h"
 
 extern struct shared_struct *sm;
