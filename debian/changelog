@@ -1,3 +1,9 @@
+netmaze (0.81+jpg0.82-10) unstable; urgency=low
+
+  * Server no longer segfaults on connect from clients without a hostname.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat,  3 Sep 2005 09:21:38 -0500
+
 netmaze (0.81+jpg0.82-9) unstable; urgency=low
 
   * Added SHELL=/bin/bash to debian/rules.

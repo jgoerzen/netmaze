@@ -1063,10 +1063,10 @@ char *get_hostname(struct cqueue *q,char *name)
   char *saddr = (char *) &(((struct sockaddr_in *) &(q->remoteaddr))->sin_addr.s_addr);
   hp = gethostbyaddr(saddr,4,AF_INET);
 
-  if(strlen(hp->h_name) > 0)
+  if(hp && hp->h_name && (strlen(hp->h_name) > 0))
     strcpy(name,hp->h_name);
   else
-    sprintf(name,"%d.%d.%d.%d",(int) saddr[0],(int) saddr[1],(int) saddr[2],(int) saddr[3]);
+    sprintf(name,"%ud.%ud.%ud.%ud",(unsigned int) saddr[0],(unsigned int) saddr[1],(unsigned int) saddr[2],(unsigned int) saddr[3]);
   return name;
 }
 
