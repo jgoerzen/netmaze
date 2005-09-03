@@ -12,6 +12,7 @@ BINARIES=$(PACKAGENAME)
 AUXBINARIES=netserv betterbot dummy follower
 LIBDIR=$(BASE)/usr/lib/games/$(PACKAGENAME)
 STRIP=strip
+SHELL=/bin/bash
 
 build:
 	xmkmf

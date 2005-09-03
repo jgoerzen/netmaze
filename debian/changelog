@@ -1,3 +1,10 @@
+netmaze (0.81+jpg0.82-9) unstable; urgency=low
+
+  * Added SHELL=/bin/bash to debian/rules.
+  * Updated depends to use tk8.4.  Closes: #180247, #180248.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri,  2 Sep 2005 21:58:38 -0500
+
 netmaze (0.81+jpg0.82-8) unstable; urgency=low
 
   * Built with Tix 8.1.  Closes: #158846.

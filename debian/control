@@ -9,7 +9,7 @@ Package: netmaze
 Architecture: any
 Section: games
 Priority: optional
-Depends: ${shlibs:Depends}, tix8.1, wish
+Depends: ${shlibs:Depends}, tix8.1, tk8.4
 Description: 3-D Multiplayer Combat Game
  This is a 3-D multiplayer game for X.  You can play by
  yourself, use computerized players ("bots"), or you can
