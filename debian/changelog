@@ -1,3 +1,9 @@
+netmaze (0.81+jpg0.82-11) unstable; urgency=low
+
+  * Build-dep is now on tix-dev instead of tix8.1-dev.  Closes: #335356.
+
+ -- John Goerzen <jgoerzen@complete.org>  Fri, 30 Dec 2005 10:22:13 -0600
+
 netmaze (0.81+jpg0.82-10) unstable; urgency=low
 
   * Server no longer segfaults on connect from clients without a hostname.
