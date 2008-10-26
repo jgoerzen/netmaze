@@ -29,7 +29,7 @@ static void send_join(void);
 
 extern void move_all(PLAYER*,int*);
 extern void run_game(MAZE*,PLAYER*);
-extern void myrandominit(long);
+extern void myrandominit(int);
 extern void inactivate_player(int);
 extern void activate_player(int);
 
@@ -60,7 +60,7 @@ void handle_socket(void)
   static int frag=0,fraglen;
 
       if(frag > 0)
-      { /* we allow exact 1 fragmentation (our messages aren't long) */
+      { /* we allow exact 1 fragmentation (our messages aren't int) */
         if((count = recv(own_socket,buf+fraglen,frag,0)) != frag)
 	{
 	  fprintf(stderr,"Major protocoll-error: %d!!\n",buf[0]);
@@ -131,7 +131,7 @@ static void handle_packet(char *buf,int len)
   char data[1];
   int (*hfeld)[MAZEDIMENSION],(*vfeld)[MAZEDIMENSION];
   int i,j;
-  long randbase;
+  int randbase;
 
   switch(*buf)
   {
@@ -143,8 +143,8 @@ static void handle_packet(char *buf,int len)
         {
           sm->playfeld[i].team = buf[16+i];
         }
-        randbase = (long) (unsigned char) buf[5];
-        randbase += ((long) (unsigned char) buf[4]) << 8;
+        randbase = (int) (unsigned char) buf[5];
+        randbase += ((int) (unsigned char) buf[4]) << 8;
         myrandominit(randbase);
         sm->gamemode = (unsigned char) buf[7];
         sm->gamemode += ((int)(unsigned char)buf[8])<<8;

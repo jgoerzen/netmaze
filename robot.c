@@ -36,7 +36,7 @@ void io_handler(int a);
 /* extern: allmove.c */
 extern void move_all(PLAYER*,int*);
 extern void run_game(MAZE*,PLAYER*);
-extern void myrandominit(long);
+extern void myrandominit(int);
 
 /* extern: user-defined-functions */
 extern int own_action(void);

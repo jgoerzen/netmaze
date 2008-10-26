@@ -17,7 +17,7 @@
 #include "netmaze.h"
 #include "better.h"
 
-#define BIGGEST			/* groesster long-wert */
+#define BIGGEST			/* groesster int-wert */
 #define NERVOUS 50000000 	/* ab hier sucht BB sein Opfer */
 #define TODESRADIUS1 7000000
 #define TODESRADIUS 15000000   
@@ -28,7 +28,7 @@ extern struct shared_struct *sm;
 
 
 static int enemy_touch(PLAYER *player,PLAYER *opfer){
-  long xd,yd;
+  int xd,yd;
 
       xd = (player->x - opfer->x);
       yd = (player->y - opfer->y);
@@ -74,18 +74,18 @@ int signum(int eingabe)
 
 
 
-/* umwandlung von quadranten nach longs und umgekehrt */
+/* umwandlung von quadranten nach ints und umgekehrt */
 
-int ltoq(long eingabe)
+int ltoq(int eingabe)
 {
 	return (int) ( (eingabe & 0xff000000) >> 24);
 }
 
-long qtol(int eingabe)
+int qtol(int eingabe)
 {
-	long ausgabe;
+	int ausgabe;
 
-	ausgabe = (long) eingabe;
+	ausgabe = (int) eingabe;
 	return (eingabe << 24);
 }
 
@@ -100,11 +100,11 @@ direkte verbindung existiert (ohne waende dazwischen)
 sicher nicht besonders schoen, effizient oder gar korrekt ;-) aber es
 geht so einigermassen... */
 
-int k_sichtbar(long x1,long y1,long  x2,long y2)
+int k_sichtbar(int x1,int y1,int  x2,int y2)
 {
 	int x1q,y1q,x2q,y2q,xqdiff,yqdiff;
 	int x_count,y_count,vstep,hstep,hstep1,vstep1;
-	long xdiff,ydiff,xl_count,yl_count,xl_step,yl_step;
+	int xdiff,ydiff,xl_count,yl_count,xl_step,yl_step;
 	float xy,yx;
 
 	
@@ -130,7 +130,7 @@ int k_sichtbar(long x1,long y1,long  x2,long y2)
 	{
 		x_count=x1q;
 		xl_count=x1;
-		xl_step= (hstep) * (long) (xy * 0x01000000);
+		xl_step= (hstep) * (int) (xy * 0x01000000);
 
 		for(y_count=y1q+((hstep==-1)?1:0);
 		    (hstep==-1)?(y_count<=y2q):(y_count>y2q);
@@ -152,7 +152,7 @@ int k_sichtbar(long x1,long y1,long  x2,long y2)
 		y_count=y1q;
 		yl_count=y1;
 		
-		yl_step=-(vstep)*(long) (yx * 0x01000000);
+		yl_step=-(vstep)*(int) (yx * 0x01000000);
 
 		for(x_count=x1q+((vstep==-1)?1:0);
 		    (vstep==-1)?(x_count<=x2q):(x_count>x2q);
@@ -215,8 +215,8 @@ int i;
 
 /* gibt die koordinate des abstandes zum opfer zurueck, die groesser ist */
 
-long OpferDistanz(int opfer){
-	long	x_dist, y_dist;
+int OpferDistanz(int opfer){
+	int	x_dist, y_dist;
 	if (opfer ==  -1) return BIGGEST;
 	x_dist=labs((sm->playfeld[ownnumber].x)-(sm->playfeld[opfer].x));
 	y_dist=labs((sm->playfeld[ownnumber].y)-(sm->playfeld[opfer].y));
@@ -230,8 +230,8 @@ long OpferDistanz(int opfer){
 /* ermittelt das naechste opfer mit hilfe von OpferDistanz() */
 
 int Opfer(){
-	long BestOpfer=-1;
-	long WeissesindenAugen=NERVOUS;
+	int BestOpfer=-1;
+	int WeissesindenAugen=NERVOUS;
 	int i;
 	if (robodat.freund == -1 ) return robodat.exfreund;
 	/* schleife ueber alle spieler */
@@ -279,10 +279,10 @@ static int bewegt(){
 }
 
 
-static long deg(double x,double y){
-  long winkel;
+static int deg(double x,double y){
+  int winkel;
   if (x){ /* muss Berechnet Werden */
-    winkel =  (long)(atan(y/x)/(2.0*M_PI) * 265 );
+    winkel =  (int)(atan(y/x)/(2.0*M_PI) * 265 );
     if (winkel > 0 ){
       if (y > 0){
       }else{
@@ -305,7 +305,7 @@ static long deg(double x,double y){
   return (winkel + 128) % 256  ;
 }
 
-static long target_angle(PLAYER* them){
+static int target_angle(PLAYER* them){
     int mx,my;
     int tx,ty;
     int dx,dy;
@@ -334,9 +334,9 @@ static long target_angle(PLAYER* them){
 
 /* testen, was besser ist, rechts oder links fahren */
 void angl(int opfer){
-	long ownwinkel=sm->playfeld[ownnumber].winkel;
-	long angle = target_angle(&(sm->playfeld[opfer]));
-	long wonkel;
+	int ownwinkel=sm->playfeld[ownnumber].winkel;
+	int angle = target_angle(&(sm->playfeld[opfer]));
+	int wonkel;
 	wonkel=angle - ownwinkel;
 /*	fprintf (stderr,"\neigenwinkel %li winkel zu anderem  %li diff %li ",ownwinkel,angle,wonkel);
 */	if ((wonkel)>0){
@@ -359,8 +359,8 @@ void angl(int opfer){
 int own_action(void){
   static touchie=0;
   int opfer, winkel, owinkel, hwinkel, lwinkel, alt_opfer;
-  long x_dist,y_dist,nx_dist,ny_dist,lx_dist,ly_dist,hx_dist,hy_dist;
-  long i;
+  int x_dist,y_dist,nx_dist,ny_dist,lx_dist,ly_dist,hx_dist,hy_dist;
+  int i;
 
   if (!(sm->playfeld[ownnumber].alive)){ /* I'm dead , wooouueeehhhh */
     touchie=0;
@@ -409,7 +409,7 @@ int own_action(void){
 	      fprintf(stderr,"%s : the pig flees! (no touch)\n",sm->ownname);
 	    }else{
 	      /* I seem to be blocked by a wall, but see the victim ->evade a short time*/
-	      i = (long)(drand48() * 2);
+	      i = (int)(drand48() * 2);
 	      switch (i) {
 	      case 0 :
 		robodat.ret = JOY_RIGHT;
@@ -423,8 +423,8 @@ int own_action(void){
 	    };
 	  };
 	}else{
-	  /* I seem to be blocked by a wall ->evade a long time */
-	  i = (long)(drand48() * 2);
+	  /* I seem to be blocked by a wall ->evade a int time */
+	  i = (int)(drand48() * 2);
 	  switch (i) {
 	  case 0 :
 	    robodat.ret = JOY_RIGHT;
@@ -441,7 +441,7 @@ int own_action(void){
       }else
 	robodat.ausweichen--; /* count down evading */
     }else if (!robodat.jagd){ /* no victim , no evade */
-      i = (long)(drand48() * 40);
+      i = (int)(drand48() * 40);
       touchie=0;
       robodat.counter++;
       switch(i){

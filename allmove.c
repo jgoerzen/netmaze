@@ -12,24 +12,24 @@
 extern void play_sound(int);
 extern int random_maze(MAZE*,int,int);
 
-extern long trigtab[];
+extern int trigtab[];
 extern struct shared_struct *sm;
 
-static void enemy_colision(long,long,PLAYER*,PLAYER*);
+static void enemy_colision(int,int,PLAYER*,PLAYER*);
 static int  enemy_touch(PLAYER *player,PLAYER *players);
-static void wall_pcoll(long,long,PLAYER*);
+static void wall_pcoll(int,int,PLAYER*);
 static int  wall_scoll(PLAYER*,int nr);
-static int  player_hit(int,long,long,PLAYER *players);
+static int  player_hit(int,int,int,PLAYER *players);
 static void set_player_pos(PLAYER*,int,MAZE *mazeadd);
 static int  add_shot(PLAYER*);
 static void remove_shot(PLAYER*,int);
-static int  ball_bounce(PLAYER *p,int i,int xc,int yc,long x,long y);
+static int  ball_bounce(PLAYER *p,int i,int xc,int yc,int x,int y);
 static void convert_trigtabs(int divider);
-void myrandominit(long s);
+void myrandominit(int s);
 static int myrandom(void);
 static void reset_player(PLAYER *players,int i);
 
-long walktab[320],shoottab[320];
+int walktab[320],shoottab[320];
 
 /*
  in diesem Programmteil sollten moeglichst keine
@@ -56,7 +56,7 @@ void move_all(PLAYER* players,int *joywerte)
 {
   int i,joy,wink,plynum,j,next;
   PLAYER *player;
-  long plx,ply;
+  int plx,ply;
   int count;
 
   count = 1<<sm->config.divider;
@@ -407,9 +407,9 @@ static void remove_shot(PLAYER *p,int i)
 /* Player <-> Wall Collision  */
 /******************************/
 
-static void wall_pcoll(long xold,long yold,PLAYER *player)
+static void wall_pcoll(int xold,int yold,PLAYER *player)
 {
-  long x,y;
+  int x,y;
   int  xc,yc;
   int  xflag=-1;
   int  yflag=-1;
@@ -547,9 +547,9 @@ static void wall_pcoll(long xold,long yold,PLAYER *player)
 
 static int wall_scoll(PLAYER *p,int i)
 {
-  long x,y;
+  int x,y;
   int  xc,yc,flag=0;
-  long sx,sy;
+  int sx,sy;
 
   sx = p->shots[i].sx;
   sy = p->shots[i].sy;
@@ -655,7 +655,7 @@ static int wall_scoll(PLAYER *p,int i)
  * wall_scoll-helper (not complete yet)
  */
 
-static int ball_bounce(PLAYER *p,int i,int xc,int yc,long x,long y)
+static int ball_bounce(PLAYER *p,int i,int xc,int yc,int x,int y)
 {
   int f = 0,w = 0;
 
@@ -744,7 +744,7 @@ static int ball_bounce(PLAYER *p,int i,int xc,int yc,long x,long y)
 /* Player <-> Player Collision  */
 /********************************/
 
-static void enemy_colision(long xold,long yold,PLAYER *player,PLAYER *players)
+static void enemy_colision(int xold,int yold,PLAYER *player,PLAYER *players)
 {
   if(enemy_touch(player,players))
   {
@@ -756,7 +756,7 @@ static void enemy_colision(long xold,long yold,PLAYER *player,PLAYER *players)
 static int enemy_touch(PLAYER *player,PLAYER *players)
 {
   int i;
-  long xd,yd;
+  int xd,yd;
 
   for(i=0;i<sm->anzplayers;i++,players++)
   {
@@ -785,10 +785,10 @@ static int enemy_touch(PLAYER *player,PLAYER *players)
 /* -1: no hit / >= 0: playernr. */
 /********************************/
 
-static int player_hit(int plnr,long sx,long sy,PLAYER *plys)
+static int player_hit(int plnr,int sx,int sy,PLAYER *plys)
 {
   int i;
-  long xd,yd;
+  int xd,yd;
 
   for(i=0;i<sm->anzplayers;i++,plys++)
   {
@@ -977,7 +977,7 @@ void inactivate_player(int pl)
  * "Random" from: r.sedgewick/algorithms
  */
 
-void myrandominit(long s)
+void myrandominit(int s)
 {
   int j;
   sm->rndshiftpos = 10;
@@ -1006,9 +1006,9 @@ static int myrandom(void)
 
 static void convert_trigtabs(int divider)
 {
-  long *tab1 = trigtab,*tab2 = walktab,*tab3 = shoottab;
+  int *tab1 = trigtab,*tab2 = walktab,*tab3 = shoottab;
   int i;
-  long s;
+  int s;
   static int t = -1;
 
   if(divider == t) return;

@@ -15,7 +15,7 @@
 
 extern struct shared_struct *sm;
 
-static int  wall_3d(long,long,long,long,int,WALL*);
+static int  wall_3d(int,int,int,int,int,WALL*);
 static void sort_walls(WALL*,int);
 static int  comp(WALL*,WALL*);
 static int  clip_walls(WALL*,int);
@@ -76,7 +76,7 @@ void draw_screen(void)
     if(sm->mapdraw)
       draw_rmap(sm->playfeld1,sm->maplines,sm->anzlines);
 #ifdef ALL_PERFORMANCE_TEST
-    { long a=clock();
+    { int a=clock();
 #endif
     if(!sm->texturemode)
       draw_maze(wallbuff,sm->playfeld1,anz,sm->shownumber); /* <-does XSync()*/
@@ -254,15 +254,15 @@ static int comp(WALL *wall1,WALL *wall2)
 
 static int calc_walls(PLAYER *players,WALL *walls,MAZE *maze,int anzahl)
 {
-  long xpos,ypos;
+  int xpos,ypos;
   int xloop,yloop,xfield,yfield,tnr;
   int xdim,ydim,xdist,ydist,istart,jstart,iend,jend;
   int winkel;
-  long xrot,yrot,x1rot,y1rot,tsin,tcos;
+  int xrot,yrot,x1rot,y1rot,tsin,tcos;
   double xdrot,ydrot,dsin,dcos /* xd1rot,yd1rot */ ;
   int i,j,p;
   int (*hwalls)[MAZEDIMENSION],(*vwalls)[MAZEDIMENSION];
-  long xd,yd,xd1;
+  int xd,yd,xd1;
   PLAYER *player;
 
   player = players+sm->shownumber;
@@ -311,14 +311,14 @@ static int calc_walls(PLAYER *players,WALL *walls,MAZE *maze,int anzahl)
   iend = yloop+istart;
   jend = xloop+jstart;
 
-  xdrot = (double) (xd1 = ((long)(-xdist)<<24) - (xpos & 0x00ffffff));
-  ydrot = (double) (yd  = ((long)(-ydist)<<24) - (ypos & 0x00ffffff));
+  xdrot = (double) (xd1 = ((int)(-xdist)<<24) - (xpos & 0x00ffffff));
+  ydrot = (double) (yd  = ((int)(-ydist)<<24) - (ypos & 0x00ffffff));
 /*
   xd1rot = xdrot*dcos - ydrot*dsin;
   yd1rot = ydrot*dcos + xdrot*dsin;
 */
-  x1rot = xrot = (long) ( (xdrot*dcos - ydrot*dsin) / 0x1000000 );
-  y1rot = yrot = (long) ( (ydrot*dcos + xdrot*dsin) / 0x1000000 );
+  x1rot = xrot = (int) ( (xdrot*dcos - ydrot*dsin) / 0x1000000 );
+  y1rot = yrot = (int) ( (ydrot*dcos + xdrot*dsin) / 0x1000000 );
 
   sm->marks=0;
 
@@ -410,7 +410,7 @@ static int calc_walls(PLAYER *players,WALL *walls,MAZE *maze,int anzahl)
 static int calc_players(int number,WALL *walls,PLAYER *players,int anz)
 {
   int i,wink;
-  long x,y,xd,yd,rmax,rmin,hor1,h1;
+  int x,y,xd,yd,rmax,rmin,hor1,h1;
   double xdrot,ydrot,dsin,dcos;
 
   x = players[number].x;
@@ -430,9 +430,9 @@ static int calc_players(int number,WALL *walls,PLAYER *players,int anz)
       walls[anz].xd = ((xd>0) ? xd : -xd);
       walls[anz].yd = ((yd>0) ? yd : -yd);
 
-      if( (yd = (long) ((ydrot*dcos + xdrot*dsin) / 0x1000000) >>16) > 0)
+      if( (yd = (int) ((ydrot*dcos + xdrot*dsin) / 0x1000000) >>16) > 0)
       {
-        xd = (long) ((xdrot*dcos - ydrot*dsin) / 0x1000000) >>16;
+        xd = (int) ((xdrot*dcos - ydrot*dsin) / 0x1000000) >>16;
 
         if(xd > 0)
         {
@@ -470,7 +470,7 @@ static int calc_players(int number,WALL *walls,PLAYER *players,int anz)
 static int calc_shoots(int number,WALL *walls,PLAYER *players,int anz)
 {
   int i,j,wink;
-  long x,y,xd,yd,rmax,rmin,h1;
+  int x,y,xd,yd,rmax,rmin,h1;
   double xdrot,ydrot,dsin,dcos;
 
   x = players[number].x;
@@ -489,9 +489,9 @@ static int calc_shoots(int number,WALL *walls,PLAYER *players,int anz)
       walls[anz].xd = ((xd>0) ? xd : -xd);
       walls[anz].yd = ((yd>0) ? yd : -yd);
 
-      if( (yd = (long) ((ydrot*dcos + xdrot*dsin) / 0x1000000) >>16) > 0)
+      if( (yd = (int) ((ydrot*dcos + xdrot*dsin) / 0x1000000) >>16) > 0)
       {
-        if( (xd = (long) ((xdrot*dcos - ydrot*dsin) / 0x1000000) >> 16) > 0)
+        if( (xd = (int) ((xdrot*dcos - ydrot*dsin) / 0x1000000) >> 16) > 0)
         {
           rmax = ((xd+PRADIUS)*(xd+PRADIUS) + (yd+PRADIUS)*(yd+PRADIUS))<<2;
           rmin = ((xd-PRADIUS)*(xd-PRADIUS) + (yd-PRADIUS)*(yd-PRADIUS))<<2;
@@ -521,9 +521,9 @@ static int calc_shoots(int number,WALL *walls,PLAYER *players,int anz)
   return anz;
 }
 
-static int wall_3d(long x1,long y1,long x2,long y2,int ident,WALL *wall)
+static int wall_3d(int x1,int y1,int x2,int y2,int ident,WALL *wall)
 {
-  long rmax,rmin,x,r,h1,h2;
+  int rmax,rmin,x,r,h1,h2;
 
   x1 >>= 16; x2 >>= 16; y1 >>= 16; y2 >>= 16;
 
@@ -635,7 +635,7 @@ static void resort(WALL *f,int n)
 
 static int stest(WALL *w1,WALL *w2)
 {
-  long d;
+  int d;
   int xr1,xl1,xr2,xl2;
 
   if(w1->ident < 0x100)

@@ -140,7 +140,7 @@ void draw_smiley(Drawable wind,short x,short y,short win,short r)
 
 }
 
-void image_face(long x,long r,int win,int col)
+void image_face(int x,int r,int win,int col)
 {
   int j,k,k1,y;
   double scale,scale1,jmp=0.5;

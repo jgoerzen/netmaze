@@ -13,19 +13,19 @@
 static char *make_jump_tab(int h);
 struct texture *load_texture(char *name);
 void image_hline(int x1,int y1,int x2,int val);
-void image_circle(long x1,long y1,long h1,long h2,int);
+void image_circle(int x1,int y1,int h1,int h2,int);
 
-extern unsigned long get_best_color(XColor *col);
+extern unsigned int get_best_color(XColor *col);
 
 extern struct shared_struct *sm;
 /*
 static unsigned char *sqrttab;
 */
 static double *circletab;
-static long *floortab;
-long texturemem;
+static int *floortab;
+int texturemem;
 extern struct texture *vtex;
-extern long trigtab[];
+extern int trigtab[];
 
 /*
  * Draw a texture-wall.. really not fast
@@ -35,11 +35,11 @@ extern long trigtab[];
  * type: 0=full, !0=mirrored
  */
 
-void texture_wall(long x1,long hn1,long x2,long hn2,struct texture *tex,long lclip,long rclip,int size,int clipped,int type)
+void texture_wall(int x1,int hn1,int x2,int hn2,struct texture *tex,int lclip,int rclip,int size,int clipped,int type)
 {
   int j,xp,hi,k,ln,d,i1,istep;
   char *jmpt,*imgbuf,*t1,*t2;
-  long h,xn1,yn1;
+  int h,xn1,yn1;
   char *ia1,*ia2,pixval1,pixval2;
   int shift=size-4,offset=0;
 
@@ -181,8 +181,8 @@ void texture_wall(long x1,long hn1,long x2,long hn2,struct texture *tex,long lcl
 
 static char *make_jump_tab(int h)
 {
-  long d;
-  long d1;
+  int d;
+  int d1;
   int i,j,h1,shft;
   char *t1,*t;
   static char *jmptabsave[32] = { NULL, };
@@ -225,7 +225,7 @@ static char *make_jump_tab(int h)
 static char *make_div_tab(int h)
 {
   int i,h1,shft;
-  long h2;
+  int h2;
   char *t;
   static char *divtabsave[32] = { NULL, };
   short (*t1)[2];
@@ -255,11 +255,11 @@ static char *make_div_tab(int h)
   h2=WYHALF*h;
   for(i=WYHALF;i<4096;i++)
   {
-    long w;
+    int w;
     w = h2 / i;
     t1[i][0] = w;
-    w = ((long)i<<16) / h;
-    w *= (long) t1[i][0];
+    w = ((int)i<<16) / h;
+    w *= (int) t1[i][0];
     w += 0x7fff;
     t1[i][1] = WYHALF - (w>>16);
   }
@@ -270,7 +270,7 @@ static char *make_div_tab(int h)
 void make_tabs(void)
 {
   int i,j;
-  long *fltab;
+  int *fltab;
   double m[] = { 0,0,0,0,0,0,0,0,0,0,0, 0.5 , 1.0 , 2.0 , 4.0 , 8.0 };
 
 /*
@@ -290,7 +290,7 @@ void make_tabs(void)
     circletab[i] = sqrt(1 - ((double) i)*((double) i)/(512*512));
   }
 
-  fltab = floortab = (long *) malloc(sizeof(long)*4*(WYSIZE>>1)*128);
+  fltab = floortab = (int *) malloc(sizeof(int)*4*(WYSIZE>>1)*128);
   if(floortab == NULL)
   {
     fprintf(stderr,"No memory for floortab.\n");
@@ -323,10 +323,10 @@ void make_tabs(void)
       xo = d1cos*(XMIN) - ydrot*dsin;
       yo = ydrot*dcos + d1sin*(XMIN);
 
-      *fltab++ = (long) (xo*0x10);
-      *fltab++ = (long) (yo*0x10);
-      *fltab++ = (long) (d1sin*0x10000*m[sm->outputsize]);
-      *fltab++ = (long) (d1cos*0x10000*m[sm->outputsize]);
+      *fltab++ = (int) (xo*0x10);
+      *fltab++ = (int) (yo*0x10);
+      *fltab++ = (int) (d1sin*0x10000*m[sm->outputsize]);
+      *fltab++ = (int) (d1cos*0x10000*m[sm->outputsize]);
     }
   }
 }
@@ -337,7 +337,7 @@ struct texture *load_texture(char *name)
   int i,j,k,precalc=0,h,w;
   FILE *f;
   char *b,*t,*t1;
-  long d,d1;
+  int d,d1;
   unsigned char buf[32];
   int map[256];
   char fn[1024];
@@ -394,11 +394,11 @@ struct texture *load_texture(char *name)
   {
     tex->datatab = malloc( sizeof(char *) * (h+1) );
     texturemem += (h>>1)*w*h+((w*h)>>1)+4;
-    tex->data = (char *) (((long) malloc((h>>1)*w*h+((w*h)>>1)+4) + 3) & 0xfffffffc);
+    tex->data = (char *) (((int) malloc((h>>1)*w*h+((w*h)>>1)+4) + 3) & 0xfffffffc);
   }
   else
   {
-    tex->data = (char *) (((long) malloc(w*h+4) + 3) & 0xfffffffc);
+    tex->data = (char *) (((int) malloc(w*h+4) + 3) & 0xfffffffc);
     texturemem += w*h+4;
   }
   if( (tex->data == NULL) || (precalc && (tex->datatab == NULL)) )
@@ -485,11 +485,11 @@ struct texture *load_texture(char *name)
   return tex;
 }
 
-void image_circle(long x1,long y1,long h1,long h2,int col)
+void image_circle(int x1,int y1,int h1,int h2,int col)
 {
   int i,j,k,xi1,xi2;
-  long d;
-  long d1=0x7fff;
+  int d;
+  int d1=0x7fff;
   int r;
   int lclip,rclip,xmid;
 
@@ -535,9 +535,9 @@ void image_floor(int x,int y,int angle,struct texture *tx)
 {
   char *image = sm->grafix.imagebuf + (IMAGEHEIGHT>>1)*IMAGEWIDTH + ((IMAGEWIDTH-WXSIZE)>>1);
   char *t = tx->data;
-  long *fltab;
+  int *fltab;
   int i,j;
-  long mask = 0x00ff0000;
+  int mask = 0x00ff0000;
   int step=IMAGEWIDTH-WXSIZE;
 
   switch(angle & 0x80)
@@ -547,7 +547,7 @@ void image_floor(int x,int y,int angle,struct texture *tx)
 
       for(j=(WYSIZE>>1);j;j--,image+=step)
       {
-        long xo,yo,tsin,tcos;
+        int xo,yo,tsin,tcos;
         xo   = x + *fltab++;
         yo   = y + *fltab++;
         tsin = *fltab++;
@@ -568,7 +568,7 @@ void image_floor(int x,int y,int angle,struct texture *tx)
 
       for(j=(WYSIZE>>1);j;j--,image+=step)
       {
-        long xo,yo,tsin,tcos;
+        int xo,yo,tsin,tcos;
         xo   = x - *fltab++;
         yo   = y - *fltab++;
         tsin = - *fltab++;
@@ -587,10 +587,10 @@ void image_top(int c1)
 {
   int i,j,k;
 
-  unsigned long *ia1;
-  unsigned long val1=c1 +((long) c1<<8) +((long) c1<<16) +((long) c1<<24);
+  unsigned int *ia1;
+  unsigned int val1=c1 +((int) c1<<8) +((int) c1<<16) +((int) c1<<24);
 
-  ia1 = (unsigned long *) (sm->grafix.imagebuf + 
+  ia1 = (unsigned int *) (sm->grafix.imagebuf + 
                        ((IMAGEWIDTH-WXSIZE)>>1) + (IMAGEHEIGHT>>1)*IMAGEWIDTH);
   k = WXSIZE>>2;
 
@@ -606,11 +606,11 @@ void image_bg(int c1,int c2)
 {
   int i,j,k;
 
-  unsigned long *ia1,*ia2;
-  unsigned long val1=c1 +((long) c1<<8) +((long) c1<<16) +((long) c1<<24);
-  unsigned long val2=c2 +((long) c2<<8) +((long) c2<<16) +((long) c2<<24);
+  unsigned int *ia1,*ia2;
+  unsigned int val1=c1 +((int) c1<<8) +((int) c1<<16) +((int) c1<<24);
+  unsigned int val2=c2 +((int) c2<<8) +((int) c2<<16) +((int) c2<<24);
 
-  ia1 = ia2 = (unsigned long *) (sm->grafix.imagebuf + 
+  ia1 = ia2 = (unsigned int *) (sm->grafix.imagebuf + 
                        ((IMAGEWIDTH-WXSIZE)>>1) + (IMAGEHEIGHT>>1)*IMAGEWIDTH);
   k = WXSIZE>>2;
 
@@ -630,7 +630,7 @@ void image_hline(int x1,int y1,int x2,int val)
 {
   char *img = sm->grafix.imagebuf + y1*IMAGEWIDTH + x1;
   int d1,d2,d3;
-  unsigned long val1;
+  unsigned int val1;
 
   if(x2 < x1)
   {
@@ -646,7 +646,7 @@ void image_hline(int x1,int y1,int x2,int val)
   }
   else
   {
-    val1=val +((long) val<<8) +((long) val<<16) +((long) val<<24);
+    val1=val +((int) val<<8) +((int) val<<16) +((int) val<<24);
     d1=4-(x1 & 0x3);
     d2=x2 & 0x3;
     d3=(x2-d2-x1-d1)>>2;
@@ -659,8 +659,8 @@ void image_hline(int x1,int y1,int x2,int val)
       *img++ = val;
     for(;d3;d3--)
     { 
-         /* *(((unsigned long*)img)++) = val1; */
-      *(((unsigned long*)img)) = val1;
+         /* *(((unsigned int*)img)++) = val1; */
+      *(((unsigned int*)img)) = val1;
       img+=4;
     }
     for(;d2;d2--)
@@ -668,7 +668,7 @@ void image_hline(int x1,int y1,int x2,int val)
   }
 }
 
-void image_sym_vline(long x1,long h1,int col,int size)
+void image_sym_vline(int x1,int h1,int col,int size)
 {
   char *ia1,*ia2;
 

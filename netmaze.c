@@ -113,7 +113,7 @@ void main(int argc,char **argv)
         sm->sologame = FALSE;
         if(strlen(argv[i]) > 255)
         {
-          fprintf(stderr,"Hostname too long!!\n");
+          fprintf(stderr,"Hostname too int!!\n");
           exit(1);
         }
         strcpy(sm->hostname,argv[i]);
@@ -128,7 +128,7 @@ void main(int argc,char **argv)
         i++;
         if(strlen(argv[i]) >= MAXNAME)
         {
-          fprintf(stderr,"Name too long. Maximum is %d character.\n",MAXNAME-1);
+          fprintf(stderr,"Name too int. Maximum is %d character.\n",MAXNAME-1);
           exit(1);
         }
         strcpy(sm->ownname,argv[i]);
@@ -169,7 +169,7 @@ void main(int argc,char **argv)
         i++;
         if(strlen(argv[i]) >= MAXCOMMENT)
         {
-          fprintf(stderr,"Comment too long. Maximum is %d character.\n",MAXCOMMENT-1);
+          fprintf(stderr,"Comment too int. Maximum is %d character.\n",MAXCOMMENT-1);
           exit(1);
         }
         strcpy(sm->owncomment,argv[i]);
@@ -507,7 +507,7 @@ static void setup_struct(void)
   if((s=getenv("NETMAZE_NAME"))!=NULL)
   {
     if(strlen(s) > 15)
-      fprintf(stderr,"NETMAZE_NAME too long!\n");
+      fprintf(stderr,"NETMAZE_NAME too int!\n");
     else
       strcpy(sm->ownname,s);
   }
@@ -516,7 +516,7 @@ static void setup_struct(void)
   if((s=getenv("NETMAZE_COMMENT"))!=NULL)
   {
     if(strlen(s) > 31)
-      fprintf(stderr,"NETMAZE_COMMENT too long!\n");
+      fprintf(stderr,"NETMAZE_COMMENT too int!\n");
     else
       strcpy(sm->owncomment,s);
   }

@@ -47,8 +47,8 @@
 struct cqueue *cfirst;
 struct gqueue *gfirst;
 
-volatile unsigned long timerticks=0;
-unsigned long lasttick=0,starttick=0;
+volatile unsigned int timerticks=0;
+unsigned int lasttick=0,starttick=0;
 
 int acc_socket;
 int menu_in=0,menu_out=1,use_exmenu=FALSE;
@@ -79,7 +79,7 @@ void send_group(struct gqueue *g,int mask,char *data,int len);
 
 void usage(void);
 void print_menu(void);
-void print_timerinfo(unsigned long);
+void print_timerinfo(unsigned int);
 void list_connections(void);
 
 void handle_input(void);
@@ -830,8 +830,8 @@ void do_timer(int nowaitgroup)
 {
   struct gqueue *g;
   struct pqueue *p;
-  unsigned long t;
-  static unsigned long lasttick;
+  unsigned int t;
+  static unsigned int lasttick;
   int d;
 
   t = timerticks;
@@ -1138,7 +1138,7 @@ void close_timeout_sockets(struct gqueue *g)
 
 void work_input(unsigned char *buf,int len,struct cqueue *q)
 {
-  unsigned long lval;
+  unsigned int lval;
   struct pqueue *pl;
   int cn;
 
@@ -1222,10 +1222,10 @@ void work_input(unsigned char *buf,int len,struct cqueue *q)
         if(!(q->mode & (SINGLEPLAYER)) )
         {
           lval = 0;
-          lval |= ((unsigned long) buf[1]) << 24;
-          lval |= ((unsigned long) buf[2]) << 16;
-          lval |= ((unsigned long) buf[3]) << 8;
-          lval |= ((unsigned long) buf[4]);
+          lval |= ((unsigned int) buf[1]) << 24;
+          lval |= ((unsigned int) buf[2]) << 16;
+          lval |= ((unsigned int) buf[3]) << 8;
+          lval |= ((unsigned int) buf[4]);
 
           switch(lval)
           {
@@ -1960,7 +1960,7 @@ void usage(void)
   exit(0);
 }
 
-void print_timerinfo(unsigned long t)
+void print_timerinfo(unsigned int t)
 {
   switch(t & 0x3f)
   {

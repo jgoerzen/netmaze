@@ -98,7 +98,7 @@
 
 struct fd_mask
 {
-  u_long fds_bits[NOFILE/32+1];
+  u_int fds_bits[NOFILE/32+1];
 };
 
 /* Structur auf MAZE. Here is all important maze-stuff */
@@ -114,18 +114,18 @@ typedef struct {
   int xdim;
   int ydim;
   char *setlist;
-  long *bitlist;
+  int *bitlist;
 } MAZE;
 
 /* PLAYER-Struct */
 
 typedef struct {
-  long sx;
-  long sy;
-  long sxd;
-  long syd;
+  int sx;
+  int sy;
+  int sxd;
+  int syd;
   int  salive;
-  long power;
+  int power;
   int  next; /* next shot in chain */
   int  last; /* last shot in chain */
 } SHOT;
@@ -163,8 +163,8 @@ typedef struct {
   char name[MAXNAME+1];
   char comment[MAXCOMMENT+1];
   int team;
-  long x;
-  long y;
+  int x;
+  int y;
   int winkel;
   int fitness;
   int follow;
@@ -200,8 +200,8 @@ typedef struct {
   int x2,h2;
   int ident;
   int rclip,lclip;
-  long xd,yd;
-  long rmax,rmin;
+  int xd,yd;
+  int rmax,rmin;
   int  clipped; /* need for texture */
 } WALL;
 
@@ -290,8 +290,8 @@ struct shared_struct /* the most should be volatile */
   int marks;                       /* # markers */
   mapmark markers[32];             /* Map markers */
   int rndshiftpos;                 /* Random */
-  long rndshifttab[55];            /* more random-stuff */
-  volatile unsigned long drawwait; /* delay Draw .. */
+  int rndshifttab[55];            /* more random-stuff */
+  volatile unsigned int drawwait; /* delay Draw .. */
 
   /* flags */
   volatile int gameflag:1;             /* Game-is-running-flag */

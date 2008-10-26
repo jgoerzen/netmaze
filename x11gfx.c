@@ -47,7 +47,7 @@ static GC mkmonomap(char *bitmap);
 static GC mkunilogo(void);
 static GC mkcolormap(char *name,XColor*);
 static GC mkdithermap(char *bitmap,char *fg,char *bg);
-unsigned long get_best_color(XColor *col);
+unsigned int get_best_color(XColor *col);
 static int calc_pos(int num,int len);
 static int calc_fitlen(int fit,int height);
 /*
@@ -59,19 +59,19 @@ extern void draw_smiley(Drawable,short,short,short,short);
 
 /* extern: texture.c */
 extern void image_bg(int ctop,int cbottom);
-extern void image_circle(long x1,long y1,long h1,long h2,int col);
-extern void image_sym_vline(long x1,long h1,int col,int);
+extern void image_circle(int x1,int y1,int h1,int h2,int col);
+extern void image_sym_vline(int x1,int h1,int col,int);
 extern void image_hline(int x1,int y1,int x2,int val);
-extern void image_face(long x,long  r,int win,int col);
+extern void image_face(int x,int  r,int win,int col);
 extern void image_floor(int x,int y,int angle,struct texture *tx);
 extern void image_top(int ctop);
 
 extern struct texture *load_texture(char *);
 extern void make_tabs(void);
-extern void texture_wall(long x1,long h1,long x2,long h2,struct texture *tex,long,long,int,int,int);
+extern void texture_wall(int x1,int h1,int x2,int h2,struct texture *tex,int,int,int,int,int);
 
 static struct texture *textures[16];
-extern long texturemem;
+extern int texturemem;
 
 static int XErrorNewHandler(Display*,XErrorEvent*);
 static int XErrorFlag=0;
@@ -582,7 +582,7 @@ void draw_maze(WALL *walls,PLAYER *play,int anzahl,int nr)
     int mx,my;
     int tx,ty;
     int dx,dy;
-    static long count=0;
+    static int count=0;
     int angle, diff;
 
     if (me && them)
@@ -631,9 +631,9 @@ void draw_texture_maze(WALL *walls,PLAYER *play,int anzahl,int nr)
   int id,i,r,r2,s;
   unsigned int width,height,x1;
   int x,y;
-  unsigned long pixel;
+  unsigned int pixel;
 #ifdef PERFORMANCE_TEST
-  long a;
+  int a;
 #endif
 
 /*
@@ -869,7 +869,7 @@ static int calc_pos(int num,int len)
 static int calc_fitlen(int fit,int height)
 {
   int i;
-  i = (int) (( (long) fit * (long) height) / 2000) ;
+  i = (int) (( (int) fit * (int) height) / 2000) ;
   return (i<0)?0:i;
 }
 
@@ -1150,17 +1150,17 @@ static GC mkdithermap(char *bitmap, char *fg, char *bg)
  * find a good color: slow and ugly but works ... 
  */
 
-unsigned long get_best_color(XColor *col)
+unsigned int get_best_color(XColor *col)
 {
 #define MAX_COLORS 1024
 #define SHFT 12
   static unsigned char cfield[MAX_COLORS][4];
-  static unsigned long pfield[MAX_COLORS];
+  static unsigned int pfield[MAX_COLORS];
   static int outofcol=0;
   static int num=0;
   int i,best=0;
   unsigned char r,g,b;
-  long d,diff=0x7fffffff;
+  int d,diff=0x7fffffff;
 
   r=(col->red>>SHFT)&0xff; g=(col->green>>SHFT)&0xff; b=(col->blue>>SHFT)&0xff;
   

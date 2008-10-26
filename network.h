@@ -15,19 +15,19 @@
 #define PLAYERMAGIC 0x77554712L
 
 /*
-void pushlong(char *s,long w)
+void pushint(char *s,int w)
 {
-  s[0] = ((unsigned long) w)>>24;
-  s[1] = ((unsigned long) w)>>16;
-  s[2] = ((unsigned long) w)>>8;
-  s[3] = ((unsigned long) w);
+  s[0] = ((unsigned int) w)>>24;
+  s[1] = ((unsigned int) w)>>16;
+  s[2] = ((unsigned int) w)>>8;
+  s[3] = ((unsigned int) w);
 }
 
-long poplong(char *s)
+int popint(char *s)
 {
-  w = ((unsigend long) s[0]<<24) + ((unsigend long) s[1]<<16) +
-      ((unsigend long) s[2]<<8) + ((unsigend long) s[3])
-  return((long) w);
+  w = ((unsigend int) s[0]<<24) + ((unsigend int) s[1]<<16) +
+      ((unsigend int) s[2]<<8) + ((unsigend int) s[3])
+  return((int) w);
 
 }
 */

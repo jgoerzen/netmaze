@@ -55,8 +55,8 @@ extern struct shared_struct *sm;
 
 struct sample 
 {
-  long start;
-  long len;
+  int start;
+  int len;
   char name[20];
 };
 
@@ -184,7 +184,7 @@ static int read_data(char *f,int type)
   FILE *fd;
   unsigned char junk[8];
   int  i,j,a,delay;
-  long blen,pos;
+  int blen,pos;
   unsigned char c;
 
   delay = play_delay;
@@ -210,10 +210,10 @@ static int read_data(char *f,int type)
   for(i=0;i<len;i++)
   {
     fread(junk,1,8,fd);
-    sinfo[i].start = ((long)junk[0]<<24)+((long)junk[1]<<16)
-                     +((long)junk[2]<<8)+((long)junk[3]);
-    sinfo[i].len = ((long)junk[4]<<24)+((long)junk[5]<<16)
-                     +((long)junk[6]<<8)+((long)junk[7]);
+    sinfo[i].start = ((int)junk[0]<<24)+((int)junk[1]<<16)
+                     +((int)junk[2]<<8)+((int)junk[3]);
+    sinfo[i].len = ((int)junk[4]<<24)+((int)junk[5]<<16)
+                     +((int)junk[6]<<8)+((int)junk[7]);
     fread(sinfo[i].name,1,16,fd);
   }
 

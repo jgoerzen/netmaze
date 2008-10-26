@@ -47,7 +47,7 @@ struct cqueue
   int plnum; /* number of players from this connection */
   int mode; /* flags */
   int socket;
-  unsigned long lasttick;
+  unsigned int lasttick;
   struct sockaddr remoteaddr;  /* remote socket address */
   char hostname[256];
   int response;
