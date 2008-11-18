@@ -1,0 +1,15 @@
+Read the 'README' !! :-)
+------------------------
+
+for the impatient guys:
+
+    edit:  config.h          (to select an environment)
+    (edit:  audio.c,Imakefile)
+    run:   xmkmf             (to generate a Makefile)
+    type:  make              (to compile the whole stuff)
+
+if an error occures:
+    cp Makefile.alt Makefile (let us use the alternate Makefile)
+    edit: Makefile           (and set all important (paths/options/CC/libs) )
+    type: make               (to compile the whole stuff)
+

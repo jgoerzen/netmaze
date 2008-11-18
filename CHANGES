@@ -1,0 +1,13 @@
+Changes since 0.71:
+Some changes in the netprotocoll. (DON'T RUN WITH OLDER VERSIONS!)
+Experimental audio support using /dev/audio. (ugly quality of the samples)
+For >= 8bit color-machines:
+  Experimental texturemapping at the walls and the floor. (option: -texture)
+Cameramode.
+Two new robots written by others (see CREDITS)
+
+-----------------
+
+Still in progress: the rewritting of the netserv. 
+  (maybe it has some new bug-'features')
+

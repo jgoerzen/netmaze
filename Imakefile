@@ -1,0 +1,26 @@
+#CC = gcc
+LOCAL_LIBRARIES = $(XLIB) -lm
+EXTRA_DEFINES = -DSH_MEM
+EXTRA_LOAD_FLAGS =
+
+SRCS1 = x11cntrl.c draw_3d.c x11smiley.c x11gfx.c netmaze.c\
+        network.c allmove.c maze.c iocntl.c audio.c texture.c
+
+SRCS2 = netserv.c maze.c
+
+OBJS1 = x11cntrl.o draw_3d.o x11smiley.o x11gfx.o netmaze.o\
+        network.o allmove.o maze.o iocntl.o audio.o texture.o
+
+OBJS2 = netserv.o maze.o
+
+SRCS3 = follower.c dummy.c better.c allmove.c robot.c network.c maze.c
+
+PROGRAMS = netmaze netserv follower dummy betterbot
+
+ComplexProgramTarget_1 (netmaze, $(LOCAL_LIBRARIES),)
+ComplexProgramTarget_2 (netserv, $(LOCAL_LIBRARIES),)
+SingleProgramTarget(dummy,dummy.o allmove.o robot.o network.o maze.o,,)
+SingleProgramTarget(follower,follower.o allmove.o robot.o network.o maze.o,,-lm)
+SingleProgramTarget(betterbot,better.o allmove.o robot.o network.o maze.o,,-lm)
+
+

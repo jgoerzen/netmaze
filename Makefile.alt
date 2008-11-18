@@ -1,0 +1,62 @@
+
+#linux:
+CC = gcc
+CFLAGS = -DSH_MEM -Wall -Wstrict-prototypes -O2 -m486 -fomit-frame-pointer
+LDFLAGS = -static
+#CFLAGS = -g -Wall
+
+#other machines:
+#CC = gcc
+#CFLAGS = -O2 -DSH_MEM
+#CFLAGS = -g -Wall
+
+#HPUX-cc:
+#CC = cc
+#CFLAGS = +O2 -Aa -D_HPUX_SOURCE -DSH_MEM
+#LDFLAGS = -L/usr/lib/X11R5
+
+LIBS = -lXext -lX11 -lm
+
+all:  netmaze netserv dummy
+
+netmaze: x11cntrl.o draw_3d.o x11smiley.o x11gfx.o netmaze.o trigtab.h \
+         netmaze.h network.o allmove.o network.h maze.o iocntl.o audio.o\
+	 texture.o
+	$(CC) -o $@ x11cntrl.o draw_3d.o netmaze.o x11gfx.o x11smiley.o \
+                  network.o allmove.o maze.o iocntl.o audio.o texture.o \
+  	          $(LDFLAGS) $(LIBS)
+
+netserv: netserv.o network.h netmaze.h maze.o
+	$(CC) -o $@ netserv.o maze.o
+
+#Robot-Demonstration:
+dummy:   dummy.o allmove.o robot.o network.o maze.o
+	$(CC) -o $@ dummy.o allmove.o robot.o network.o maze.o
+
+#Robots written by others: (see the *.c files for info/copyrights) 
+
+betterbot:   better.o allmove.o robot.o network.o maze.o
+        $(CC) -o $@ better.o allmove.o robot.o network.o maze.o -lm
+
+follower:   follower.o allmove.o robot.o network.o maze.o
+        $(CC) -o $@ follower.o allmove.o robot.o network.o maze.o -lm
+
+
+netmaze.o:   netmaze.h config.h
+netserv.o:   network.h netmaze.h config.h netcmds.h
+network.o:   netmaze.h network.h config.h netcmds.h
+x11gfx.o:    netmaze.h bitmap.h config.h
+x11smiley.o: netmaze.h x11smiley.h config.h
+x11cntrl.o:  netmaze.h config.h
+allmove.o:   netmaze.h trigtab.h config.h
+draw_3d.o:   netmaze.h trigtab.h config.h
+maze.o:      netmaze.h defmaze.h config.h
+robot.o:     netmaze.h trigtab.h network.h config.h
+dummy.o:     netmaze.h config.h
+iocntl.o:    netmaze.h config.h
+audio.o:     config.h
+better.o:    better.h
+
+clean:
+	rm -f *.o netserv netmaze dummy xtest/*.o betterbot
+

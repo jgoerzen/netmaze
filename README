@@ -1,0 +1,110 @@
+Netmaze - V0.81 - April 1994
+--------------------------------------------------------------------
+[Don't run this version with older ones!!!!]
+[there were changes in the netprotocol from v0.62 to v0.7 to 0.8 !!]
+
+  written and copyrights (c) by M.Hipp
+  email: 
+     mhipp@student.uni-tuebingen.de
+
+--------------------------------------------------------------------
+
+ This program is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+--------------------------------------------------------------------
+
+This is the pre-release of a multiplayercombatgame.
+I release this incomplete version, because I think, that I
+won't have the time to complete it in the next months.
+In this version there still bugs, but you can play it (I hope) without
+getting 'core's. Most of the bugs are in the gfx/clip-functions (and the
+netserv, of course).
+
+What is netmaze:
+----------------
+Netmaze is a client/server multiplayergame.
+You play in a virtuell maze and the goal of the game is to hunt down
+your opponents. The view is full animated 3D. On fast machines, you can
+even run it smooth with texturemaping at the walls and the floor.
+
+The game requires:
+  - fast X11-Grafix (copying offscreen-pixmap/image to the foreground-window, 
+    drawing polygons)
+  - a (semi)fast Network with 'ping'-times lower than 30ms from EVERY client to 
+    the servermachine. (if one connection isn't fast enough, it slows down 
+    all players.) (For LAN's (e.g. in a pool) this shouldn't be a problem!)
+    (if your network isn't fast enough, you can try to change the beat-divider
+     in the netserv from 1 to 2 or 4 and/or start it with -nowait) 
+
+Don't try to patch the code if you want to cheat. It should be near
+impossible.
+
+I have tested the program on HPUX,SunOS4.1.3 and Linux-Machines.
+There is a RS6000 & NeXT port. (see CREDITS)
+It was also reported, that the program runs on SGI and DEC 5000 machines.
+
+****************************************************************************
+******** FOR LINUX: You have to compile the IPC-Stuff in your kernel *******
+****************************************************************************
+
+If you find any bugs or port netmaze to a new environment, please let me know. 
+I'm also happy about fanmails, showing me that the hundreds of hours I spend 
+since late 1991 to code this game weren't a waste of time.
+
+Hope you enjoy it, 
+                  Mike 
+
+how to install: (short! ;-) )
+----------------------------
+ - Get an ANSI-C-Compiler. (in the Makefile, 'gcc' is selected).
+ - Now there is an Imakefile. Just type 'xmkmf' to create a Makefile for
+   your machine. (there is also an alternate Makefile (Makefile.alt), which
+   you can use, if there is a problem with the 'imake'-generated one.
+ - Now you have to select one of the environments in the config.h file.
+ - Sorry, but a lot of the comments/names in the program are in german, 
+   so this won`t help.
+ - The warnings about the 'select'-command aren't important.
+ - if your system doesn't support asyncronous input/output you can try to
+     add a: '#define USE_IPC' at the the end of the config.h file.
+ - if your machine doesn't support the shared memory extension for X11, remove
+   the -DSH_MEM in the Makefile/Imakefile.
+
+how to use:  (short help with 'netmaze -h')
+-----------
+  Start the server 'netserv' on a machine. 
+  Then every player can start his netmaze-client.
+  example: netmaze -server <servermachinename>
+  Without calling a server-machine the program enters
+  a one-player-(team)-test-mode.
+  The 'dummy' is a demo-robot. You can connect some of them
+  to the netserv if you want more enemies. (But this 
+  demo-robot is really a stupid one.) 
+  You can write your own robots. (see dummy.c) 
+  Always try to run the netmaze-client on a machine with 
+  less load and in the foreground.
+  You can first do a 'xset -r' if you want a better 
+  keyboard-handling. (use 'xset r' to switch it on again.)
+  You can select a teammode by adding a teamlist
+  to the (2)-Command in the netserv.
+  You can select an extended (and an extended just-for-fun) mode.
+  Set the NETMAZE_NAME or NETMAZE_COMMENT environment-variable to choose
+  another default name and comment.
+
+known bugs: (this is still a preversion!!)
+-------------------------------------------
+  x11: (some) bugs in the refresh
+  gfx: bugs in the (re)sort and clip-functions
+  allmove: sometimes the game is out-of-sync (different machines are having 
+           different game-states) (I hope, that I found it)
+           somtimes problems with shot-rebounce
+  textures in huge-mode: sometimes cores. (I think that's an overflow)
+  .. and many more .. ;-)
+

@@ -1,0 +1,28 @@
+Thanks to:
+  Wayne Richardson (wdr@vnet.ibm.com) 
+    for the RS6000 port.
+  Bjorn P. Brox (brox@dms.corena.no)
+    for the mouse-control-support.
+  Justin Beech (justinb@lehman.com)
+    for the extended gamemode(s).
+  Yang, Qing Kuang (yangq@sol.cs.wmich.edu)
+    for the Imakefile
+  Rainer Koch (koch@kapp-coburg.de)
+    for the dither-grafix-version
+  Jens Kurlanda,Benjamin Baermann (benni@/kurlanda@informatik.uni-frankfurt.de)
+    for the betterbot
+  Mike Roderick (roderick@ksu.ksu.edu)
+    for the followerbot
+  Nicolas Pioch (Nicolas.Pioch@enst.fr)
+  Hate (Hate@MorgenGrauen/Hate@TubMUD, dunno email :) )
+    for the NeXT-Patches.
+  Thomas Woerner (zxmwt09@student.uni-tuebingen.de)
+    for the texturedesign.
+  and many others for bug-reports (and fixes).
+
+and to all fanmailwriters. 
+
+--
+Sorry, but I didn't manage to reply all the mails, because sometimes it wasn't 
+possbile to deliver the mail to the given return-path.
+

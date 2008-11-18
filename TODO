@@ -1,0 +1,28 @@
+TODO and IDEAPOOL:
+------------------
+Sound-Support
+better wait-handling in the netmaze-main-loop
+(Mouse)/Joystick-support
+more bitmaps for mono-mode (and a better colourmap for the playercolours) 
+statistics (and maybe a hall-of-fame)
+Asyncrounous X11-Keyboard-Input (only possible with IPC yet)
+better X11-expose-handling (rectangle-list)
+X11-Menus for netserv (see: xtest/xmserv)
+more setable game-configurations
+netsubserv... (better: rewrite the whole netserv)
+Manualpages
+more robot-players (lqet's start a robot-competition)
+ (ok, I've gotten the first robots, but ... I NEED MORE !)
+rewrite wall<->shot collision-check (and the rebounce)
+rewrite the resort/clip-stuff
+implement all extended modes (and a mode with extra-weapons)
+remove the typos in the descriptions ;-)
+Playercommunication (messages: to team,to players,to master)
+Find the strange (very seldom) 'out-of-sync-bug'. (I hope I've found it!)
+Replay-Function
+maze-features: traps,teleport-fields,moving walls,invisible walls ....etc
+sidewalking,refresh fields ....
+better samples,better textures,textures selectable in the maze-file
+--
+If someone want to do something from the list: do it and send it to me.
+
