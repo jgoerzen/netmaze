@@ -14,11 +14,20 @@ LIBDIR=$(BASE)/usr/lib/games/$(PACKAGENAME)
 STRIP=strip
 SHELL=/bin/bash
 
+# use -02 on ia64 to avoid a ftbfs
+DEB_BUILD_ARCH_CPU ?=$(shell dpkg-architecture -qDEB_BUILD_ARCH_CPU)
+ifeq ($(DEB_BUILD_ARCH_CPU),ia64)
+	OPTLEVEL=-O2
+else
+	OPTLEVEL=-O3
+endif
+
+
 build:
 	xmkmf
-# Force compilation using -O3....
+# Force compilation using the desired optimisation level....
 	cp Makefile Makefile~
-	sed s/-O2/-O3/ Makefile~ > Makefile
+	sed s/-O2/$(OPTLEVEL)/ Makefile~ > Makefile
 	make
 	touch build
 
