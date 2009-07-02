@@ -3,7 +3,7 @@ Maintainer: John Goerzen <jgoerzen@complete.org>
 Section: games
 Priority: optional
 Standards-Version: 3.5.2
-Build-Depends: sharutils, tix-dev, libx11-dev, libxext-dev, libxt-dev, x-dev, xutils
+Build-Depends: sharutils, tix-dev, libx11-dev, libxext-dev, libxt-dev, x-dev, xutils, xutils-dev
 
 Package: netmaze
 Architecture: any
