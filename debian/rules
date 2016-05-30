@@ -22,6 +22,7 @@ else
 	OPTLEVEL=-O3
 endif
 
+export SOURCE_DATE_EPOCH = $(shell date -d "$$(dpkg-parsechangelog --count 1 -SDate)" +%s)
 
 build:
 	xmkmf
@@ -64,6 +65,8 @@ binary-arch: build
 	dpkg-gencontrol -isp
 	chown -R root.root debian/tmp
 	chmod -R go-ws,go+r debian/tmp
+	find debian/tmp -newermt "@$$SOURCE_DATE_EPOCH" -print0 | \
+		xargs -0r touch --no-dereference --date="@$$SOURCE_DATE_EPOCH"
 	dpkg --build debian/tmp ..
 
 clean:
