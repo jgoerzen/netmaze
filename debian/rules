@@ -62,7 +62,7 @@ binary-arch: build
 	install -o root -g root -m 755 debian/prerm debian/tmp/DEBIAN/
 	install -o root -g root -m 755 debian/postinst debian/tmp/DEBIAN/
 	install -o root -g root -m 755 debian/postrm debian/tmp/DEBIAN/
-	dh_strip
+	dh_strip -Pdebian/tmp
 	dpkg-gencontrol -isp
 	chown -R root.root debian/tmp
 	chmod -R go-ws,go+r debian/tmp
