@@ -3,6 +3,8 @@ netmaze (0.81+jpg0.82-15) unstable; urgency=low
   * Ack NMU.  Closes: #726040, #503035.
   * Make builds reproducible.  Closes: #778200.
   * Make mtimes reproducible.  Closes: #793731.
+  * Use dh_strip instead of install -s to strip binaries, thus
+    handling nostrip build option.  Closes: #437619.
 
  -- John Goerzen <jgoerzen@complete.org>  Sun, 29 May 2016 21:41:47 -0500
 

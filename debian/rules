@@ -44,9 +44,9 @@ binary-arch: build
 		debian/tmp/usr/share/doc/$(PACKAGENAME) debian/tmp/usr/lib/menu \
 		$(LIBDIR)
 # Netmaze goes into bin, everything else to the lib dir.
-	install -s -o root -g root -m 0755 $(BINARIES) debian/tmp/usr/games
+	install -o root -g root -m 0755 $(BINARIES) debian/tmp/usr/games
 	install -o root -g root -m 0755 xnetserv debian/tmp/usr/games
-	install -s -o root -g root -m 0755 $(AUXBINARIES) $(LIBDIR)/
+	install -o root -g root -m 0755 $(AUXBINARIES) $(LIBDIR)/
 	cp -r mazes lib *.tcl $(LIBDIR)
 	chmod 0755 $(LIBDIR)/{mazes,lib,*.tcl}
 	uudecode nmlogo.gif.uue
@@ -62,6 +62,7 @@ binary-arch: build
 	install -o root -g root -m 755 debian/prerm debian/tmp/DEBIAN/
 	install -o root -g root -m 755 debian/postinst debian/tmp/DEBIAN/
 	install -o root -g root -m 755 debian/postrm debian/tmp/DEBIAN/
+	dh_strip
 	dpkg-gencontrol -isp
 	chown -R root.root debian/tmp
 	chmod -R go-ws,go+r debian/tmp
