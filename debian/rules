@@ -53,7 +53,7 @@ binary-arch: build
 	cp debian/changelog debian/tmp/usr/share/doc/$(PACKAGENAME)/changelog.Debian
 	cp README.Debian CREDITS README TODO debian/tmp/usr/share/doc/$(PACKAGENAME)
 	cp CHANGES debian/tmp/usr/share/doc/$(PACKAGENAME)/changelog
-	gzip -9vr debian/tmp/usr/share/doc/$(PACKAGENAME)
+	gzip -9nvr debian/tmp/usr/share/doc/$(PACKAGENAME)
 	cp debian/copyright debian/tmp/usr/share/doc/$(PACKAGENAME)/copyright
 	cp debian/menu debian/tmp/usr/lib/menu/netmaze
 	dpkg-shlibdeps debian/tmp/usr/games/netmaze \
