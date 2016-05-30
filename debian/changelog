@@ -1,3 +1,12 @@
+netmaze (0.81+jpg0.82-14.1) unstable; urgency=low
+
+  * Non-maintainer upload.
+  * Replace tk8.4 by tk8.5 in dpendencies and call wish8.5 instead of
+    wish8.4 or wish. Closes: #726040.
+  * Fix loading the Tix library.
+
+ -- Sergei Golovan <sgolovan@debian.org>  Tue, 29 Oct 2013 10:44:22 +0400
+
 netmaze (0.81+jpg0.82-14) unstable; urgency=low
 
   * Added build-dep on xutils-dev.  Closes: #485213.

@@ -1,4 +1,4 @@
-#!/usr/bin/wish8.4 -f
+#!/usr/bin/wish8.5 -f
 
 frame .init
 pack .init
