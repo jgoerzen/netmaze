@@ -1,3 +1,10 @@
+netmaze (0.81+jpg0.82-16) unstable; urgency=medium
+
+  [ John Goerzen ]
+  * Update Depends on tk to use default version (Closes: #893478)
+
+ -- John Goerzen <jgoerzen@complete.org>  Thu, 26 Apr 2018 02:02:54 +0000
+
 netmaze (0.81+jpg0.82-15) unstable; urgency=low
 
   * Ack NMU.  Closes: #726040, #503035.
