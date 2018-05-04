@@ -10,6 +10,14 @@
 /* #define RS6000 1 */  /* look at CREDITS */
 /* #define NeXT 1   */  /* look at CREDITS */
 
+/* Note USE_SOUND 1 under Linux environments expects the
+*  Open Sound System environment.  Most modern Linux 
+*  distros can provide this under the ALSA environment via 
+*  the AOSS wrapper.
+*  (e.g.  aoss netmaze -options)
+*  See:
+*  https://alsa.opensrc.org/Aoss
+*/ 
 #define USE_SOUND 1
 
 /* set the paths, according to your environment: */
@@ -55,4 +63,3 @@
 #endif
 
 
-#undef USE_SOUND
