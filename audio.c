@@ -34,7 +34,7 @@
 #endif
 
 #ifdef HAVE_FLUSH
-/* #include <stropts.h> */
+  #include <stropts.h> 
 #endif
 
 #ifdef SS10_AUDIO
@@ -227,7 +227,11 @@ static int read_data(char *f,int type)
   blen = ftell(fd)-pos;
   fseek(fd,pos,0);
 
-  data = (char *) ((malloc(blen*play_delay+16)+15) & 0xfffffff0);
+  //data = (char *) ((malloc(blen*play_delay+16)+15) & 0xfffffff0);
+  void *memptr = NULL;
+  data = posix_memalign(&memptr, 16, blen*play_delay+16);
+  data = memptr;
+
   fread(data,1,blen,fd);
   fclose(fd);
 

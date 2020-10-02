@@ -189,6 +189,7 @@ void init_robot(void)
 {
   srand48(258245);
   strcpy(sm->owncomment,"Ich weiss, dass ich besser bin!");
+  strcpy(sm->ownname,"Betterbot");
 }
 
 void start_robot(int num)
