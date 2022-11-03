@@ -76,4 +76,7 @@ clean:
 		*.o *~ Makefile *.bak
 	-rm nmlogo.gif
 
-.PHONY: clean binary binary-indep binary-arch
+build-arch: build
+build-indep: build
+
+.PHONY: build-arch build-indep binary binary-indep binary-arch clean

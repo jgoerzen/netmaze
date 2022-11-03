@@ -1,3 +1,10 @@
+netmaze (0.81+jpg0.82-16.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * debian/rules: Add build-{arch,indep} (Closes: #999062).
+
+ -- Marcos Talau <talau@debian.org>  Thu, 03 Nov 2022 18:57:40 -0300
+
 netmaze (0.81+jpg0.82-16) unstable; urgency=medium
 
   [ John Goerzen ]
