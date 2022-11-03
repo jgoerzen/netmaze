@@ -2,14 +2,14 @@ Source: netmaze
 Maintainer: John Goerzen <jgoerzen@complete.org>
 Section: games
 Priority: optional
-Standards-Version: 4.1.4
+Standards-Version: 3.5.2
 Build-Depends: sharutils, tix-dev, libx11-dev, libxext-dev, libxt-dev, x11proto-core-dev, xutils, xutils-dev, debhelper
 
 Package: netmaze
 Architecture: any
 Section: games
 Priority: optional
-Depends: ${shlibs:Depends}, tix, tk, ${misc:Depends}
+Depends: ${shlibs:Depends}, tix, tk
 Description: 3-D Multiplayer Combat Game
  This is a 3-D multiplayer game for X.  You can play by
  yourself, use computerized players ("bots"), or you can
