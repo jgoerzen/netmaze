@@ -1,4 +1,4 @@
-#!/usr/bin/wish8.5 -f
+#!/usr/bin/wish -f
 
 # NOTE: Tcl/Tk or C on some Sun machines seems to be broken in that it
 # requres flush calls after every puts when the output is being piped to

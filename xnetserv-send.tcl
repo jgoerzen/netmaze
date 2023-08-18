@@ -1,4 +1,4 @@
-#!/usr/bin/wish8.5 -f
+#!/usr/bin/wish -f
 
 puts $argv
 
