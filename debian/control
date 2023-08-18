@@ -3,7 +3,6 @@ Maintainer: John Goerzen <jgoerzen@complete.org>
 Section: games
 Priority: optional
 Standards-Version: 3.5.2
-Standards-Version: 4.1.4
 Build-Depends: sharutils, tix-dev, libx11-dev, libxext-dev, libxt-dev, x11proto-core-dev, x11-utils, x11-xserver-utils, x11-session-utils, xfonts-utils, xutils-dev, debhelper
 
 Package: netmaze
