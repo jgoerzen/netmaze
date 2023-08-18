@@ -1,7 +1,7 @@
 netmaze (0.81+jpg0.82-17) unstable; urgency=medium
 
   * ACK NMU.  Closes: #999062.
-  * Fixes for textures, betterbot, and sound from Craig Prevallet.
+  * Fixes for textures and betterbot from Craig Prevallet.
 
  -- John Goerzen <jgoerzen@complete.org>  Fri, 18 Aug 2023 06:38:55 -0500
 
