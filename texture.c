@@ -396,14 +396,14 @@ struct texture *load_texture(char *name)
     texturemem += (h>>1)*w*h+((w*h)>>1)+4;
     //tex->data = (char *) (((int) malloc((h>>1)*w*h+((w*h)>>1)+4) + 3) & 0xfffffffc);
     void *memptr = NULL;
-    tex->data = posix_memalign(&memptr, 32, (h>>1)*w*h+((w*h)>>1)+4);
+    posix_memalign(&memptr, 32, (h>>1)*w*h+((w*h)>>1)+4);
     tex->data = memptr;
   }
   else
   {
     //tex->data = (char *) (((int) malloc(w*h+4) + 3) & 0xfffffffc);
     void *memptr = NULL;
-    tex->data = posix_memalign(&memptr, 32, w*h+4 );
+    posix_memalign(&memptr, 32, w*h+4 );
     tex->data = memptr;
     texturemem += w*h+4;
   }
