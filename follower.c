@@ -4,12 +4,18 @@
  */
 
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "netmaze.h"
 #include <math.h>
 
 #define PI 3.141592
 
 extern struct shared_struct *sm;
+
+int get_dist(int a, int b);
+int whos_close(int me);
+int what_ang(int target , int me);
 
 /*******************
  * the init_robot is called one time right after the start
