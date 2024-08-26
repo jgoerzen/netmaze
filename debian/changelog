@@ -1,3 +1,9 @@
+netmaze (0.81+jpg0.82-18) unstable; urgency=medium
+
+  * Include stdlib.h to provide prototype for exit.  Closes: #1075312.
+
+ -- John Goerzen <jgoerzen@complete.org>  Mon, 26 Aug 2024 06:01:19 -0500
+
 netmaze (0.81+jpg0.82-17) unstable; urgency=medium
 
   * ACK NMU.  Closes: #999062.
