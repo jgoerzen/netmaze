@@ -16,6 +16,7 @@
 #include <netinet/in.h>
 #include <signal.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <netdb.h>
 #include <sys/time.h>
 #include <sys/ioctl.h>
