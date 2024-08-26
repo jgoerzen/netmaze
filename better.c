@@ -14,10 +14,12 @@
 #include <math.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <limits.h>
 #include "netmaze.h"
 #include "better.h"
 
-#define BIGGEST			/* groesster int-wert */
+#define BIGGEST INT_MAX			/* groesster int-wert */
 #define NERVOUS 50000000 	/* ab hier sucht BB sein Opfer */
 #define TODESRADIUS1 7000000
 #define TODESRADIUS 15000000   
@@ -26,6 +28,7 @@ extern int walktab[320];	/* static-declaration in allmove.c
 static int ownnumber;
 extern struct shared_struct *sm;
 
+extern void send_owncomment(void);
 
 static int enemy_touch(PLAYER *player,PLAYER *opfer){
   int xd,yd;
@@ -358,7 +361,7 @@ void angl(int opfer){
 /* wird bei jedem 'tick' aufgerufen. das herz von BB. bb - Falsch BB hat kein Herz . JK*/
 
 int own_action(void){
-  static touchie=0;
+  static int touchie=0;
   int opfer, winkel, owinkel, hwinkel, lwinkel, alt_opfer;
   int x_dist,y_dist,nx_dist,ny_dist,lx_dist,ly_dist,hx_dist,hy_dist;
   int i;
