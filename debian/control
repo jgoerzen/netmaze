@@ -2,6 +2,7 @@ Source: netmaze
 Maintainer: John Goerzen <jgoerzen@complete.org>
 Section: games
 Priority: optional
+Rules-Requires-Root: no
 Standards-Version: 3.5.2
 Build-Depends: sharutils, tix-dev, libx11-dev, libxext-dev, libxt-dev, x11proto-core-dev, x11-utils, x11-xserver-utils, x11-session-utils, xfonts-utils, xutils-dev, debhelper
 

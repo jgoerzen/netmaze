@@ -1,3 +1,11 @@
+netmaze (0.81+jpg0.82-18.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Remove need for root when building the package.
+    (Closes: #1089397)
+
+ -- Niels Thykier <niels@thykier.net>  Wed, 01 Jan 2025 10:51:30 +0000
+
 netmaze (0.81+jpg0.82-18) unstable; urgency=medium
 
   * Various fixes for newer gcc.  Closes: #1075312.
