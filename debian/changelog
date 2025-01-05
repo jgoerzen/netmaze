@@ -1,3 +1,9 @@
+netmaze (0.81+jpg0.82-19) unstable; urgency=medium
+
+  * ACK NMU.  Closes: #1089397.
+
+ -- John Goerzen <jgoerzen@complete.org>  Sat, 04 Jan 2025 22:44:31 -0600
+
 netmaze (0.81+jpg0.82-18.1) unstable; urgency=medium
 
   * Non-maintainer upload.
